@@ -5,6 +5,7 @@ import { site } from '@/content/site';
 interface SocialIconsProps {
   className?: string;
   size?: 'sm' | 'md' | 'lg';
+  rounded?: 'xl' | 'full';
 }
 
 function GithubIcon({ className }: { className?: string }) {
@@ -49,7 +50,11 @@ function WhatsAppIcon({ className }: { className?: string }) {
   );
 }
 
-export function SocialIcons({ className = '', size = 'md' }: SocialIconsProps) {
+export function SocialIcons({
+  className = '',
+  size = 'md',
+  rounded = 'xl',
+}: SocialIconsProps) {
   const iconSize = {
     sm: 'w-4 h-4',
     md: 'w-5 h-5',
@@ -61,6 +66,8 @@ export function SocialIcons({ className = '', size = 'md' }: SocialIconsProps) {
     md: 'w-10 h-10',
     lg: 'w-12 h-12',
   }[size];
+
+  const roundedClass = rounded === 'full' ? 'rounded-full' : 'rounded-xl';
 
   const items = [
     { name: 'GitHub', href: site.github, icon: <GithubIcon className={iconSize} /> },
@@ -78,7 +85,7 @@ export function SocialIcons({ className = '', size = 'md' }: SocialIconsProps) {
           target={item.name === 'Email' ? undefined : '_blank'}
           rel={item.name === 'Email' ? undefined : 'noopener noreferrer'}
           aria-label={item.name}
-          className={`${buttonSize} inline-flex items-center justify-center rounded-xl bg-card border border-border text-text-muted hover:text-accent-text hover:border-accent hover:shadow-card transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent`}
+          className={`${buttonSize} inline-flex items-center justify-center ${roundedClass} bg-card border border-border text-text-muted hover:text-accent-text hover:border-accent hover:shadow-card transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent`}
         >
           {item.icon}
         </a>

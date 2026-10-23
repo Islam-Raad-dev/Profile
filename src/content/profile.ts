@@ -13,7 +13,7 @@ export const profile = {
   greeting: { en: "Hello, I'm", ar: 'أهلاً، أنا' } as L,
   shortBio: {
     en: "I build AI-powered applications and backend systems, and I'm deepening my machine learning skills.",
-    ar: 'أبني تطبيقات مدعومة بالذكاء الاصطناعي وأنظمة خلفية (Backend)، وأعمّق مهاراتي في تعلّم الآلة.',
+    ar: 'أقوم ببناء تطبيقات وأنظمة خلفية مدعومة بالذكاء الاصطناعي، وأعمل على تعميق مهاراتي في تعلم الآلة.',
   } as L,
   longBio: {
     en: "Second-year AI Engineering student at the University of Mosul. I build AI-powered applications and backend systems, and I'm deepening my machine learning skills through Samsung Innovation Campus and GCI World. I'm seeking opportunities to learn and contribute to real-world AI and software projects.",
