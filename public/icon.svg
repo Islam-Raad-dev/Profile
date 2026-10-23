@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="irGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3395ff" />
+      <stop offset="100%" stop-color="#6366f1" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="128" fill="#0a0a0a" stroke="rgba(255,255,255,0.12)" stroke-width="16" />
+  <g fill="url(#irGrad)">
+    <!-- Letter I -->
+    <rect x="120" y="140" width="48" height="232" rx="24" />
+    <!-- Letter R -->
+    <rect x="224" y="140" width="48" height="232" rx="24" />
+    <path d="M 248 140 H 320 C 360 140 388 168 388 206 C 388 244 360 272 320 272 H 248 Z" />
+    <circle cx="316" cy="206" r="28" fill="#0a0a0a" />
+    <path d="M 304 260 L 376 364 C 382 372 376 384 364 384 H 328 C 320 384 312 378 308 372 L 252 284 Z" />
+  </g>
+</svg>
