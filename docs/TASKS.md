@@ -65,10 +65,10 @@ Schedule
 **Acceptance:** whole site works as one scrolling page on every device; the nav highlights the right section while scrolling; disabling a section in `site.ts` removes it from page and nav with no other edits.
 
 ## Phase 4B - Desktop section switcher (about 20 min) - skippable (cut line)
-- [ ] `SectionSwitcher`: one section at a time, `AnimatePresence mode="wait"`, direction-aware slide that mirrors in RTL
-- [ ] Hash sync (`#projects`), back/forward, ArrowLeft/ArrowRight (reversed in RTL)
-- [ ] Internal scroll for tall panels, nav clearance
-- [ ] `App.tsx` picks switcher on fine-pointer desktop and scroll layout on touch (after mount, no hydration warning)
+- [x] `SectionSwitcher`: one section at a time, `AnimatePresence mode="wait"`, direction-aware slide that mirrors in RTL
+- [x] Hash sync (`#projects`), back/forward, ArrowLeft/ArrowRight (reversed in RTL)
+- [x] Internal scroll for tall panels, nav clearance
+- [x] `App.tsx` picks switcher on fine-pointer desktop and scroll layout on touch (after mount, no hydration warning)
 
 **Acceptance:** desktop transitions are smooth, no layout jump, hash and back button work, resizing across 768px or switching to touch does not break state, reduced motion falls back to crossfade.
 
