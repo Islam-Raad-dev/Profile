@@ -33,6 +33,14 @@ export function ScrollLayout() {
   const [activeSection, setActiveSection] = useState<SectionId>(initialSection);
 
   useEffect(() => {
+    if (typeof window !== 'undefined' && window.location.hash) {
+      const targetId = window.location.hash.replace('#', '');
+      const el = document.getElementById(targetId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'instant', block: 'start' });
+      }
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         const visibleEntries = entries.filter((e) => e.isIntersecting);

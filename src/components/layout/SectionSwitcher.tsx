@@ -100,13 +100,13 @@ export function SectionSwitcher() {
 
   useEffect(() => {
     const handleHashChange = () => {
-      const hash = (window.location.hash.replace('#', '') || initialSection) as SectionId;
-      const isEnabled = enabledSections.some((s) => s.id === hash);
-      if (isEnabled && hash !== activeSection) {
+      const currentHash = (window.location.hash.replace('#', '') || initialSection) as SectionId;
+      const valid = enabledSections.some((s) => s.id === currentHash);
+      if (valid && currentHash !== activeSection) {
         const currentIndex = enabledSections.findIndex((s) => s.id === activeSection);
-        const nextIndex = enabledSections.findIndex((s) => s.id === hash);
+        const nextIndex = enabledSections.findIndex((s) => s.id === currentHash);
         setDirection(nextIndex > currentIndex ? 1 : -1);
-        setActiveSection(hash);
+        setActiveSection(currentHash);
         window.scrollTo({ top: 0, behavior: 'instant' });
       }
     };

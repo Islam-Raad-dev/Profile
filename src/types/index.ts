@@ -3,7 +3,7 @@ export type L = { en: string; ar: string };
 
 export type SectionId = 'home' | 'about' | 'projects' | 'skills' | 'achievements' | 'contact';
 
-export type SkillCategory = 'language' | 'framework' | 'ai' | 'database' | 'tool';
+export type SkillCategory = 'backend' | 'frontend' | 'ai' | 'tools' | 'database' | 'language' | 'framework' | 'tool';
 
 export type Skill = {
   id: string;
