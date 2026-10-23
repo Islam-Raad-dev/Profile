@@ -49,10 +49,10 @@ Schedule
 **Acceptance:** two cards render (Napta first). Modal opens/closes by click, Esc and backdrop; focus returns to the card; Social Media App modal has no Live demo button; layout holds with 1, 2 or 6 projects (test by temporarily duplicating data, then revert).
 
 ## Phase 3 - Skills, Achievements, Contact (about 50 min)
-- [ ] Skills grid: featured six first and larger, rest after, hover label, brand colour on hover, staggered reveal
-- [ ] Achievements: two groups, cards with icon + status pill
-- [ ] Contact: link rows (email, WhatsApp with number shown LTR, LinkedIn, GitHub, CV) and the Formspree form with validation, honeypot, 4 states, disabled fallback if env missing
-- [ ] Footer line
+- [x] Skills grid: featured six first and larger, rest after, hover label, brand colour on hover, staggered reveal
+- [x] Achievements: two groups, cards with icon + status pill
+- [x] Contact: link rows (email, WhatsApp with number shown LTR, LinkedIn, GitHub, CV) and the Formspree form with validation, honeypot, 4 states, disabled fallback if env missing
+- [x] Footer line
 
 **Acceptance:** form posts successfully to Formspree from the browser (test with a real submission) and shows localized success; with the env var removed it shows the disabled message instead of crashing. All logos render or fall back cleanly.
 

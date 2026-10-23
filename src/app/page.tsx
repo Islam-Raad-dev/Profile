@@ -4,6 +4,9 @@ import { Toggles } from '@/components/layout/Toggles';
 import { HeroSection } from '@/components/sections/hero/HeroSection';
 import { AboutSection } from '@/components/sections/about/AboutSection';
 import { ProjectsSection } from '@/components/sections/projects/ProjectsSection';
+import { SkillsSection } from '@/components/sections/skills/SkillsSection';
+import { AchievementsSection } from '@/components/sections/achievements/AchievementsSection';
+import { ContactSection } from '@/components/sections/contact/ContactSection';
 import { useLang } from '@/lib/i18n';
 import { ui } from '@/content/ui';
 
@@ -20,11 +23,9 @@ export default function Home() {
         <HeroSection />
         <AboutSection />
         <ProjectsSection />
-
-        {/* Phase 3 Placeholder Anchors */}
-        <div id="skills" />
-        <div id="achievements" />
-        <div id="contact" />
+        <SkillsSection />
+        <AchievementsSection />
+        <ContactSection />
       </main>
 
       {/* Footer */}
