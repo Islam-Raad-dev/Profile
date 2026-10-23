@@ -6,6 +6,8 @@ export const springNav = {
   stiffness: 380,
 };
 
+export const CUBIC_EASE = [0.22, 1, 0.36, 1] as const;
+
 export const revealVariants: Variants = {
   hidden: {
     opacity: 0,
@@ -18,7 +20,7 @@ export const revealVariants: Variants = {
     filter: 'blur(0px)',
     transition: {
       duration: 0.5,
-      ease: [0.22, 1, 0.36, 1],
+      ease: CUBIC_EASE,
     },
   },
 };
@@ -33,7 +35,7 @@ export const blurFadeVariants: Variants = {
     filter: 'blur(0px)',
     transition: {
       duration: 0.42,
-      ease: [0.22, 1, 0.36, 1],
+      ease: CUBIC_EASE,
     },
   },
   exit: {
@@ -41,7 +43,7 @@ export const blurFadeVariants: Variants = {
     filter: 'blur(14px)',
     transition: {
       duration: 0.26,
-      ease: [0.22, 1, 0.36, 1],
+      ease: CUBIC_EASE,
     },
   },
 };

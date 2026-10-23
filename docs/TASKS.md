@@ -32,19 +32,19 @@ Schedule
 **Acceptance:** `npm run dev` shows a page with a working theme toggle and language toggle (RTL flips), no flash on refresh, build and lint pass.
 
 ## Phase 1 - Content layer, Hero, About (about 40 min)
-- [ ] Fill `src/content/*.ts` from CONTENT.md (all sections' data, UI strings, EN + AR)
-- [ ] `ui/` primitives: `SectionHeader`, `Button`, `Reveal`, `Chip`, `SocialIcons` (inline SVG GitHub/LinkedIn/WhatsApp + lucide Mail)
-- [ ] Hero section per DESIGN.md 5.3 (greeting, two-line name, role, tagline, short bio, 3 buttons, socials, photo with monogram fallback, intro animation)
-- [ ] About section: long bio, education card, activities timeline
+- [x] Fill `src/content/*.ts` from CONTENT.md (all sections' data, UI strings, EN + AR)
+- [x] `ui/` primitives: `SectionHeader`, `Button`, `Reveal`, `Chip`, `SocialIcons` (inline SVG GitHub/LinkedIn/WhatsApp + lucide Mail)
+- [x] Hero section per DESIGN.md 5.3 (greeting, two-line name, role, tagline, short bio, 3 buttons, socials, photo with monogram fallback, intro animation)
+- [x] About section: long bio, education card, activities timeline
 
 **Acceptance:** Hero and About look right in EN and AR, dark and light, at 375px and 1280px. Buttons link correctly (CV opens, Contact target exists as an anchor placeholder). No hardcoded text in components.
 
 ## Phase 2 - Projects (about 40 min)
-- [ ] `TechLogo` with `simple-icons` slug lookup and monogram fallback (verify each slug; report any missing)
-- [ ] `ProjectCover` (screenshot or generated fallback, `onError` fallback)
-- [ ] `ProjectCard`, grid, featured-first ordering, badge, stack chips (max 5 then +n)
-- [ ] `ProjectModal` (lazy loaded): accessible dialog, blur-fade motion, links only when present, gallery when several images
-- [ ] `showComingSoon` flag support (default off)
+- [x] `TechLogo` with `simple-icons` slug lookup and monogram fallback (verify each slug; report any missing)
+- [x] `ProjectCover` (screenshot or generated fallback, `onError` fallback)
+- [x] `ProjectCard`, grid, featured-first ordering, badge, stack chips (max 5 then +n)
+- [x] `ProjectModal` (lazy loaded): accessible dialog, blur-fade motion, links only when present, gallery when several images
+- [x] `showComingSoon` flag support (default off)
 
 **Acceptance:** two cards render (Napta first). Modal opens/closes by click, Esc and backdrop; focus returns to the card; Social Media App modal has no Live demo button; layout holds with 1, 2 or 6 projects (test by temporarily duplicating data, then revert).
 
