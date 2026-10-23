@@ -25,7 +25,6 @@ export function AboutSection() {
         />
       </Reveal>
 
-      {/* Long Bio */}
       <Reveal delay={0.1}>
         <div className="bg-card backdrop-blur-glass border border-border rounded-2xl p-6 sm:p-8 shadow-card mb-10 text-start">
           <p className="text-base sm:text-lg text-text leading-relaxed max-w-3xl">
@@ -35,7 +34,6 @@ export function AboutSection() {
       </Reveal>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-        {/* Education Card */}
         <Reveal delay={0.2} className="h-full">
           <div className="bg-card backdrop-blur-glass border border-border rounded-2xl p-6 sm:p-8 shadow-card h-full flex flex-col justify-between text-start">
             <div>
@@ -71,7 +69,6 @@ export function AboutSection() {
           </div>
         </Reveal>
 
-        {/* Activities Timeline */}
         <Reveal delay={0.3} className="h-full">
           <div className="bg-card backdrop-blur-glass border border-border rounded-2xl p-6 sm:p-8 shadow-card h-full text-start">
             <div className="flex items-center gap-3 mb-6">
@@ -86,7 +83,6 @@ export function AboutSection() {
             <div className="relative ps-6 sm:ps-8 border-s-2 border-border space-y-8 ms-2">
               {profile.activities.map((item) => (
                 <div key={item.id} className="relative group">
-                  {/* Timeline Dot */}
                   <span className="absolute -start-[31px] sm:-start-[39px] top-1.5 w-3.5 h-3.5 rounded-full bg-bg border-2 border-accent transition-transform duration-200 group-hover:scale-125" />
 
                   <div>

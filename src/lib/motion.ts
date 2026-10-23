@@ -25,6 +25,21 @@ export const revealVariants: Variants = {
   },
 };
 
+export const liteRevealVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 12,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.35,
+      ease: CUBIC_EASE,
+    },
+  },
+};
+
 export const blurFadeVariants: Variants = {
   hidden: {
     opacity: 0,

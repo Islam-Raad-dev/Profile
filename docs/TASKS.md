@@ -73,13 +73,13 @@ Schedule
 **Acceptance:** desktop transitions are smooth, no layout jump, hash and back button work, resizing across 768px or switching to touch does not break state, reduced motion falls back to crossfade.
 
 ## Phase 5 - Polish and QA (about 30 min)
-- [ ] Lite mode verified on phone width (no backdrop blur on cards, lighter animation)
-- [ ] Full matrix: {375px, 1280px} x {dark, light} x {EN, AR}; fix overflow, clipped text, wrong icon directions
-- [ ] Keyboard-only pass (nav, toggles, cards, modal, form); focus ring visible everywhere
-- [ ] Contrast pass (light-mode accent text uses `--accent-text`)
-- [ ] Reduced-motion pass
-- [ ] Remove unused files/dependencies; `npm run lint` and `npm run build` clean; no console errors or hydration warnings
-- [ ] Review bundle: lazy chunks for modal/switcher confirmed
+- [x] Lite mode verified on phone width (no backdrop blur on cards, lighter animation)
+- [x] Full matrix: {375px, 1280px} x {dark, light} x {EN, AR}; fix overflow, clipped text, wrong icon directions
+- [x] Keyboard-only pass (nav, toggles, cards, modal, form); focus ring visible everywhere
+- [x] Contrast pass (light-mode accent text uses `--accent-text`)
+- [x] Reduced-motion pass
+- [x] Remove unused files/dependencies; `npm run lint` and `npm run build` clean; no console errors or hydration warnings
+- [x] Review bundle: lazy chunks for modal/switcher confirmed
 
 **Acceptance:** agent reports the QA matrix result with screenshots from the built-in browser, and a short list of known issues if any.
 

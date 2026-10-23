@@ -87,8 +87,15 @@ html[data-lite] {
   --blur: 0px;
 }
 
-html[data-lite] .backdrop-blur-glass {
+html[data-lite] .backdrop-blur-glass,
+html[data-lite] .backdrop-blur-md,
+html[data-lite] .backdrop-blur-sm {
   backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+html[data-lite] nav > div {
+  background-color: var(--card-bg);
 }
 
 body {

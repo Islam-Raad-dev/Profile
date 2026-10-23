@@ -5,7 +5,7 @@ import { motion, type Variants } from 'motion/react';
 import { skills } from '@/content/skills';
 import { ui } from '@/content/ui';
 import { useLang } from '@/lib/i18n';
-import { useReducedMotion } from '@/lib/media';
+import { useReducedMotion, useMediaQuery, PHONE_QUERY } from '@/lib/media';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { TechLogo } from '@/components/ui/TechLogo';
 import { Reveal } from '@/components/ui/Reveal';
@@ -27,7 +27,6 @@ function SkillTile({ skill, isFeatured }: { skill: Skill; isFeatured: boolean })
         className="pointer-events-none"
       />
 
-      {/* Floating Tooltip */}
       <span className="absolute -top-9 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-200 pointer-events-none text-xs font-semibold px-2.5 py-1 rounded-md bg-card/95 border border-border shadow-lg text-text whitespace-nowrap z-30">
         {skill.name}
       </span>
@@ -38,6 +37,7 @@ function SkillTile({ skill, isFeatured }: { skill: Skill; isFeatured: boolean })
 export function SkillsSection() {
   const { t } = useLang();
   const reducedMotion = useReducedMotion();
+  const isPhone = useMediaQuery(PHONE_QUERY);
 
   const featuredSkills = skills.filter((s) => s.featured);
   const otherSkills = skills.filter((s) => !s.featured && s.show !== false);
@@ -47,7 +47,7 @@ export function SkillsSection() {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: reducedMotion ? 0 : 0.04,
+        staggerChildren: reducedMotion || isPhone ? 0 : 0.04,
       },
     },
   };
@@ -82,7 +82,6 @@ export function SkillsSection() {
       </Reveal>
 
       <div className="space-y-10">
-        {/* Featured Skills (Larger) */}
         <Reveal delay={0.1}>
           <div>
             <div className="flex flex-wrap gap-4 sm:gap-6 justify-center sm:justify-start">
@@ -93,7 +92,6 @@ export function SkillsSection() {
           </div>
         </Reveal>
 
-        {/* Regular Skills */}
         <Reveal delay={0.2}>
           <motion.div
             variants={containerVariants}

@@ -35,7 +35,6 @@ export function ProjectModal({
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
 
-    // Focus close button initially
     const timer = setTimeout(() => {
       closeBtnRef.current?.focus();
     }, 50);
@@ -92,7 +91,6 @@ export function ProjectModal({
         aria-modal="true"
         aria-labelledby="project-modal-title"
       >
-        {/* Backdrop */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -103,7 +101,6 @@ export function ProjectModal({
           aria-hidden="true"
         />
 
-        {/* Modal Window */}
         <motion.div
           ref={modalRef}
           initial={{ opacity: 0, scale: 0.96, filter: 'blur(14px)' }}
@@ -113,7 +110,6 @@ export function ProjectModal({
           className="relative w-full max-w-2xl bg-card border border-border rounded-3xl shadow-2xl overflow-hidden z-10 my-8 text-start max-h-[90vh] flex flex-col"
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Header & Close Button */}
           <button
             ref={closeBtnRef}
             type="button"
@@ -124,13 +120,10 @@ export function ProjectModal({
             <X className="w-5 h-5" />
           </button>
 
-          {/* Scrollable Container */}
           <div className="overflow-y-auto">
-            {/* Cover */}
             <ProjectCover project={project} />
 
             <div className="p-6 sm:p-8 space-y-6">
-              {/* Title & Badge */}
               <div>
                 <div className="flex flex-wrap items-center gap-2 mb-2">
                   <h3
@@ -150,7 +143,6 @@ export function ProjectModal({
                 </p>
               </div>
 
-              {/* Description */}
               {project.description && (
                 <div className="border-t border-border pt-4">
                   <p className="text-base text-text leading-relaxed whitespace-pre-line">
@@ -159,7 +151,6 @@ export function ProjectModal({
                 </div>
               )}
 
-              {/* Tech Stack */}
               <div className="border-t border-border pt-4">
                 <h4 className="text-xs font-semibold tracking-wider uppercase text-text-muted mb-3">
                   {t(ui['project.stack'])}
@@ -177,7 +168,6 @@ export function ProjectModal({
                 </div>
               </div>
 
-              {/* Action Buttons (Only render if links exist!) */}
               {(project.live || project.repo) && (
                 <div className="border-t border-border pt-6 flex flex-wrap gap-3">
                   {project.live && (

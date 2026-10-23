@@ -49,16 +49,15 @@ export function HeroSection() {
     <section
       id="home"
       aria-labelledby="hero-name"
-      className="relative min-h-[calc(100vh-100px)] flex items-center justify-center py-12 md:py-20"
+      className="relative min-h-[calc(100vh-100px)] flex items-center justify-center pt-8 pb-16 md:py-20"
     >
       <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center"
+          className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-12 items-center"
         >
-          {/* Mobile Photo (Rendered first on small screens) */}
           <motion.div
             variants={itemVariants}
             className="md:hidden flex justify-center w-full"
@@ -85,7 +84,6 @@ export function HeroSection() {
             </div>
           </motion.div>
 
-          {/* Text Column */}
           <div className="md:col-span-7 flex flex-col items-start text-start">
             <motion.div variants={itemVariants} className="mb-2">
               <span className="font-handwriting text-accent-text text-xl sm:text-2xl transform -rotate-1 inline-block">
@@ -142,7 +140,6 @@ export function HeroSection() {
             </motion.div>
           </div>
 
-          {/* Desktop Photo Column */}
           <motion.div
             variants={itemVariants}
             className="hidden md:flex md:col-span-5 justify-center lg:justify-end"

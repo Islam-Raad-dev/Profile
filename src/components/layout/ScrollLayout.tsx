@@ -35,10 +35,8 @@ export function ScrollLayout() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        // Find visible section with highest intersection ratio
         const visibleEntries = entries.filter((e) => e.isIntersecting);
         if (visibleEntries.length > 0) {
-          // Sort by descending intersection ratio
           visibleEntries.sort((a, b) => b.intersectionRatio - a.intersectionRatio);
           const topEntryId = visibleEntries[0].target.id as SectionId;
           if (topEntryId) {
@@ -73,7 +71,6 @@ export function ScrollLayout() {
 
   return (
     <>
-      {/* Accessible Skip to Content Link */}
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:start-4 focus:z-50 focus:px-4 focus:py-2.5 focus:rounded-xl focus:bg-accent focus:text-white focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent font-medium text-sm transition-all"
@@ -81,7 +78,6 @@ export function ScrollLayout() {
         {t(ui['a11y.skip'])}
       </a>
 
-      {/* Main Content Area */}
       <main id="main-content" className="space-y-12 md:space-y-20 pb-28 md:pb-36">
         {enabledSections.map((sec) => {
           const Component = SECTION_COMPONENTS[sec.id];
@@ -90,7 +86,6 @@ export function ScrollLayout() {
         })}
       </main>
 
-      {/* Floating Bottom Navigation */}
       <Navbar activeSection={activeSection} onNavigate={handleNavigate} />
     </>
   );

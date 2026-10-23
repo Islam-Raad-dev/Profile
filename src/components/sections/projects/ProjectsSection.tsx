@@ -29,7 +29,6 @@ export function ProjectsSection({ customProjects }: ProjectsSectionProps) {
 
   const list = customProjects || projects;
 
-  // Sort featured projects first
   const sortedProjects = [...list].sort((a, b) => {
     if (a.featured && !b.featured) return -1;
     if (!a.featured && b.featured) return 1;
@@ -62,7 +61,6 @@ export function ProjectsSection({ customProjects }: ProjectsSectionProps) {
         />
       </Reveal>
 
-      {/* Projects Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
         {sortedProjects.map((project, index) => (
           <Reveal key={project.id} delay={index * 0.1}>
@@ -70,7 +68,6 @@ export function ProjectsSection({ customProjects }: ProjectsSectionProps) {
           </Reveal>
         ))}
 
-        {/* Coming Soon Card if showComingSoon is enabled */}
         {site.showComingSoon && (
           <Reveal delay={sortedProjects.length * 0.1}>
             <div className="h-full min-h-[300px] flex flex-col items-center justify-center p-8 rounded-2xl border border-dashed border-border bg-surface/50 text-center">
@@ -83,7 +80,6 @@ export function ProjectsSection({ customProjects }: ProjectsSectionProps) {
         )}
       </div>
 
-      {/* Dynamic Project Modal */}
       {isModalOpen && (
         <ProjectModal
           project={selectedProject}

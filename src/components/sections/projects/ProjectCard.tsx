@@ -29,7 +29,6 @@ export function ProjectCard({ project, onSelect }: ProjectCardProps) {
       onClick={() => onSelect(project, cardRef)}
       className="group relative w-full flex flex-col text-start rounded-2xl border border-border bg-card backdrop-blur-glass shadow-card hover:shadow-xl hover:border-accent hover:-translate-y-1 transition-all duration-200 overflow-hidden cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
     >
-      {/* Featured Star Badge */}
       {project.featured && (
         <div className="absolute top-3 start-3 z-10 flex items-center gap-1 px-2.5 py-1 rounded-full bg-accent-soft/90 backdrop-blur-md border border-[rgba(51,149,255,0.3)] text-accent-text text-xs font-semibold shadow-sm">
           <Star className="w-3 h-3 fill-current" />
@@ -37,10 +36,8 @@ export function ProjectCard({ project, onSelect }: ProjectCardProps) {
         </div>
       )}
 
-      {/* Cover Image or Fallback */}
       <ProjectCover project={project} />
 
-      {/* Card Content */}
       <div className="p-5 sm:p-6 flex flex-col flex-1 justify-between w-full">
         <div>
           <div className="flex flex-wrap items-center gap-2 mb-2">
@@ -59,7 +56,6 @@ export function ProjectCard({ project, onSelect }: ProjectCardProps) {
           </p>
         </div>
 
-        {/* Tech Stack Chips */}
         <div className="flex flex-wrap items-center gap-1.5 pt-3 border-t border-border/80">
           {visibleTech.map((tech) => (
             <div

@@ -83,7 +83,6 @@ export function AchievementsSection() {
       </Reveal>
 
       <div className="space-y-12">
-        {/* Awards and Programs */}
         <div>
           <Reveal delay={0.1}>
             <h3 className="text-lg sm:text-xl font-bold font-display text-text mb-6 text-start flex items-center gap-2">
@@ -101,7 +100,6 @@ export function AchievementsSection() {
           </div>
         </div>
 
-        {/* Certificates */}
         <div>
           <Reveal delay={0.2}>
             <h3 className="text-lg sm:text-xl font-bold font-display text-text mb-6 text-start flex items-center gap-2">

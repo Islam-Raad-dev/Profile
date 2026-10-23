@@ -15,7 +15,6 @@ export function Toggles() {
       aria-label="Preferences"
       className="fixed top-4 end-4 z-40 flex items-center p-1.5 rounded-full bg-card/80 backdrop-blur-glass border border-border shadow-card"
     >
-      {/* Language Toggle */}
       <button
         type="button"
         onClick={toggleLang}
@@ -27,7 +26,6 @@ export function Toggles() {
 
       <span className="w-px h-4 bg-border mx-1" aria-hidden="true" />
 
-      {/* Theme Toggle */}
       <button
         type="button"
         onClick={toggleTheme}

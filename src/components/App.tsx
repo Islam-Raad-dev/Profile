@@ -20,13 +20,8 @@ export function App() {
 
   return (
     <div className="relative min-h-screen bg-bg text-text selection:bg-accent-soft selection:text-accent-text">
-      {/* Top Corner Preference Toggles */}
       <Toggles />
-
-      {/* Main Layout: ScrollLayout for touch / mobile and SSR, SectionSwitcher for fine-pointer desktop */}
       {!mounted || isTouch ? <ScrollLayout /> : <SectionSwitcher />}
-
-      {/* Quiet Footer */}
       <footer className="py-8 text-center border-t border-border/60 text-xs text-text-muted">
         <p>
           © {new Date().getFullYear()} {t(ui.footer)}

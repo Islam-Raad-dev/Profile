@@ -58,7 +58,6 @@ export function Navbar({ activeSection, onNavigate }: NavbarProps) {
                 isActive ? 'text-accent-text font-semibold' : 'text-text-muted hover:text-text'
               }`}
             >
-              {/* Active Background Pill */}
               {isActive && (
                 <motion.span
                   layoutId="active-nav-pill"
@@ -69,7 +68,6 @@ export function Navbar({ activeSection, onNavigate }: NavbarProps) {
 
               <Icon className="w-4 h-4 sm:w-4.5 sm:h-4.5 shrink-0" />
 
-              {/* Label: On mobile show only for active item; on desktop show for all */}
               <span
                 className={`${
                   isActive ? 'inline-block' : 'hidden md:inline-block'

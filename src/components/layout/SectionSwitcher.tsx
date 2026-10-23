@@ -98,7 +98,6 @@ export function SectionSwitcher() {
     [activeSection, enabledSections]
   );
 
-  // Handle browser back and forward buttons
   useEffect(() => {
     const handleHashChange = () => {
       const hash = (window.location.hash.replace('#', '') || initialSection) as SectionId;
@@ -120,7 +119,6 @@ export function SectionSwitcher() {
     };
   }, [activeSection, enabledSections, initialSection]);
 
-  // Keyboard navigation with ArrowLeft / ArrowRight
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const active = document.activeElement;
@@ -163,7 +161,6 @@ export function SectionSwitcher() {
 
   return (
     <>
-      {/* Skip Link */}
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:start-4 focus:z-50 focus:px-4 focus:py-2.5 focus:rounded-xl focus:bg-accent focus:text-white focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent font-medium text-sm transition-all"
@@ -171,7 +168,6 @@ export function SectionSwitcher() {
         {t(ui['a11y.skip'])}
       </a>
 
-      {/* Main Content Area */}
       <main
         id="main-content"
         className="min-h-[calc(100vh-140px)] flex flex-col justify-center pb-28 md:pb-36 overflow-x-hidden"
@@ -191,7 +187,6 @@ export function SectionSwitcher() {
         </AnimatePresence>
       </main>
 
-      {/* Floating Bottom Navigation */}
       <Navbar activeSection={activeSection} onNavigate={navigateTo} />
     </>
   );

@@ -90,7 +90,6 @@ export function ContactSection() {
     e.preventDefault();
     if (!isConfigured) return;
 
-    // Check honeypot
     if (formData._gotcha) {
       setFormState('success');
       return;
@@ -182,7 +181,6 @@ export function ContactSection() {
       </Reveal>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start text-start">
-        {/* Left Column: Direct Links */}
         <Reveal delay={0.1} className="lg:col-span-5 space-y-3">
           {contactMethods.map((method) => (
             <a
@@ -216,7 +214,6 @@ export function ContactSection() {
           ))}
         </Reveal>
 
-        {/* Right Column: Contact Form */}
         <Reveal delay={0.2} className="lg:col-span-7">
           <div className="p-6 sm:p-8 rounded-3xl bg-card border border-border backdrop-blur-glass shadow-card relative">
             {!isConfigured && (
@@ -254,7 +251,6 @@ export function ContactSection() {
             )}
 
             <form onSubmit={handleSubmit} noValidate className="space-y-4">
-              {/* Spam Honeypot (Hidden) */}
               <input
                 type="text"
                 name="_gotcha"
@@ -266,7 +262,6 @@ export function ContactSection() {
                 aria-hidden="true"
               />
 
-              {/* Name */}
               <div>
                 <label
                   htmlFor="contact-name"
@@ -293,7 +288,6 @@ export function ContactSection() {
                 )}
               </div>
 
-              {/* Email */}
               <div>
                 <label
                   htmlFor="contact-email"
@@ -320,7 +314,6 @@ export function ContactSection() {
                 )}
               </div>
 
-              {/* Message */}
               <div>
                 <label
                   htmlFor="contact-message"
@@ -347,7 +340,6 @@ export function ContactSection() {
                 )}
               </div>
 
-              {/* Submit Button */}
               <div className="pt-2">
                 <Button
                   type="submit"
