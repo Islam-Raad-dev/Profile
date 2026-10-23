@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import type { Project } from '@/types';
 import { useLang } from '@/lib/i18n';
+import { useIsMounted } from '@/lib/media';
 import { CUBIC_EASE } from '@/lib/motion';
 import { ui } from '@/content/ui';
 import { TechLogo } from '@/components/ui/TechLogo';
@@ -26,6 +28,7 @@ export function ProjectModal({
   triggerRef,
 }: ProjectModalProps) {
   const { t } = useLang();
+  const mounted = useIsMounted();
   const modalRef = useRef<HTMLDivElement>(null);
   const closeBtnRef = useRef<HTMLButtonElement>(null);
 
@@ -81,47 +84,51 @@ export function ProjectModal({
     };
   }, [isOpen, onClose, triggerRef]);
 
-  if (!isOpen || !project) return null;
+  if (!mounted) return null;
 
-  return (
+  return createPortal(
     <AnimatePresence>
-      <div
-        className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="project-modal-title"
-      >
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.26 }}
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm"
-          onClick={onClose}
-          aria-hidden="true"
-        />
-
-        <motion.div
-          ref={modalRef}
-          initial={{ opacity: 0, scale: 0.96, filter: 'blur(14px)' }}
-          animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-          exit={{ opacity: 0, scale: 0.96, filter: 'blur(14px)' }}
-          transition={{ duration: 0.42, ease: CUBIC_EASE }}
-          className="relative w-full max-w-2xl bg-card border border-border rounded-3xl shadow-2xl overflow-hidden z-10 my-8 text-start max-h-[90vh] flex flex-col"
-          onClick={(e) => e.stopPropagation()}
+      {isOpen && project && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 md:p-8 overflow-y-auto"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="project-modal-title"
         >
-          <button
-            ref={closeBtnRef}
-            type="button"
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.22 }}
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm"
             onClick={onClose}
-            aria-label={t(ui['project.close'])}
-            className="absolute top-4 end-4 z-20 w-10 h-10 rounded-full bg-card/80 border border-border backdrop-blur-md flex items-center justify-center text-text hover:text-accent-text hover:border-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-          >
-            <X className="w-5 h-5" />
-          </button>
+            aria-hidden="true"
+          />
 
-          <div className="overflow-y-auto">
-            <ProjectCover project={project} />
+          <motion.div
+            ref={modalRef}
+            initial={{ opacity: 0, scale: 0.96, y: 16 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.96, y: 16 }}
+            transition={{ duration: 0.32, ease: CUBIC_EASE }}
+            className="relative w-full max-w-2xl bg-card border border-border rounded-3xl shadow-2xl overflow-hidden z-10 text-start max-h-[85vh] flex flex-col my-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              ref={closeBtnRef}
+              type="button"
+              onClick={onClose}
+              aria-label={t(ui['project.close'])}
+              className="absolute top-4 end-4 z-20 w-10 h-10 rounded-full bg-card/85 border border-border backdrop-blur-md flex items-center justify-center text-text hover:text-accent-text hover:border-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent shadow-md cursor-pointer"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="overflow-y-auto w-full overscroll-contain">
+              <ProjectCover
+                project={project}
+                aspectRatio="aspect-[21/9] sm:aspect-[2/1] max-h-52 sm:max-h-60"
+              />
 
             <div className="p-6 sm:p-8 space-y-6">
               <div>
@@ -195,7 +202,9 @@ export function ProjectModal({
             </div>
           </div>
         </motion.div>
-      </div>
-    </AnimatePresence>
+        </div>
+      )}
+    </AnimatePresence>,
+    document.body
   );
 }

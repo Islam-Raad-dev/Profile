@@ -9,9 +9,14 @@ import { useLang } from '@/lib/i18n';
 interface ProjectCoverProps {
   project: Project;
   className?: string;
+  aspectRatio?: string;
 }
 
-export function ProjectCover({ project, className = '' }: ProjectCoverProps) {
+export function ProjectCover({
+  project,
+  className = '',
+  aspectRatio = 'aspect-[16/10]',
+}: ProjectCoverProps) {
   const { t } = useLang();
   const [imageError, setImageError] = useState(false);
 
@@ -21,7 +26,7 @@ export function ProjectCover({ project, className = '' }: ProjectCoverProps) {
 
   if (hasImage && project.images) {
     return (
-      <div className={`relative aspect-[16/10] w-full overflow-hidden rounded-t-xl bg-surface ${className}`}>
+      <div className={`relative ${aspectRatio} w-full overflow-hidden rounded-t-xl bg-surface ${className}`}>
         <Image
           src={project.images[0]}
           alt={title}
@@ -36,7 +41,7 @@ export function ProjectCover({ project, className = '' }: ProjectCoverProps) {
 
   return (
     <div
-      className={`relative aspect-[16/10] w-full overflow-hidden rounded-t-xl bg-surface border-b border-border flex items-center justify-center p-6 ${className}`}
+      className={`relative ${aspectRatio} w-full overflow-hidden rounded-t-xl bg-surface border-b border-border flex items-center justify-center p-6 ${className}`}
     >
       <div className="absolute inset-0 bg-gradient-to-br from-accent/15 via-accent-2/10 to-transparent" />
       <div className="absolute -bottom-8 -end-8 w-36 h-36 rounded-full bg-accent/20 blur-2xl" />

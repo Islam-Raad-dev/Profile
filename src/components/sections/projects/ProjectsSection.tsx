@@ -23,10 +23,6 @@ interface ProjectsSectionProps {
 
 export function ProjectsSection({ customProjects }: ProjectsSectionProps) {
   const { t } = useLang();
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const activeTriggerRef = useRef<HTMLElement | null>(null);
-
   const list = customProjects || projects;
 
   const sortedProjects = [...list].sort((a, b) => {
@@ -34,6 +30,24 @@ export function ProjectsSection({ customProjects }: ProjectsSectionProps) {
     if (!a.featured && b.featured) return 1;
     return 0;
   });
+
+  const [selectedProject, setSelectedProject] = useState<Project | null>(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('modal') === '1') {
+        return sortedProjects[0] || null;
+      }
+    }
+    return null;
+  });
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('modal') === '1';
+    }
+    return false;
+  });
+  const activeTriggerRef = useRef<HTMLElement | null>(null);
 
   const handleOpenModal = (
     project: Project,
@@ -80,14 +94,12 @@ export function ProjectsSection({ customProjects }: ProjectsSectionProps) {
         )}
       </div>
 
-      {isModalOpen && (
-        <ProjectModal
-          project={selectedProject}
-          isOpen={isModalOpen}
-          onClose={handleCloseModal}
-          triggerRef={activeTriggerRef}
-        />
-      )}
+      <ProjectModal
+        project={selectedProject}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        triggerRef={activeTriggerRef}
+      />
     </section>
   );
 }
