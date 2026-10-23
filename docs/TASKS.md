@@ -57,10 +57,10 @@ Schedule
 **Acceptance:** form posts successfully to Formspree from the browser (test with a real submission) and shows localized success; with the env var removed it shows the disabled message instead of crashing. All logos render or fall back cleanly.
 
 ## Phase 4A - Navigation and scroll layout (about 25 min)
-- [ ] `Navbar` per DESIGN.md 5.1 generated from `site.sections` (active pill with `layoutId`, `aria-current`)
-- [ ] `Toggles` pill (language + theme) in the top corner
-- [ ] `ScrollLayout` with all sections, IntersectionObserver scroll-spy, smooth scroll (instant under reduced motion), bottom padding for the nav
-- [ ] Skip link
+- [x] `Navbar` per DESIGN.md 5.1 generated from `site.sections` (active pill with `layoutId`, `aria-current`)
+- [x] `Toggles` pill (language + theme) in the top corner
+- [x] `ScrollLayout` with all sections, IntersectionObserver scroll-spy, smooth scroll (instant under reduced motion), bottom padding for the nav
+- [x] Skip link
 
 **Acceptance:** whole site works as one scrolling page on every device; the nav highlights the right section while scrolling; disabling a section in `site.ts` removes it from page and nav with no other edits.
 
