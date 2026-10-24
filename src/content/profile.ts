@@ -1,9 +1,9 @@
 import type { Education, L, TimelineItem } from '@/types';
 
 export const profile = {
-  fullName: { en: 'Islam Raad', ar: 'إسلام رعد' } as L,
+  fullName: { en: 'Islam Raad', ar: 'إسلام رعــــد' } as L,
   shortName: { en: 'Islam', ar: 'إسلام' } as L,
-  heroName: { line1: { en: 'ISLAM', ar: 'إسلام' }, line2: { en: 'RAAD', ar: 'رعد' } },
+  heroName: { line1: { en: 'ISLAM', ar: 'إسلام' }, line2: { en: 'RAAD', ar: 'رعــــد' } },
   role: { en: 'AI Engineering Student', ar: 'طالب هندسة الذكاء الاصطناعي' } as L,
   tagline: {
     en: 'AI Engineering student at the University of Mosul.',
