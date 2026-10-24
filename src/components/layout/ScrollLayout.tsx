@@ -5,8 +5,8 @@ import type { SectionId } from '@/types';
 import { site } from '@/content/site';
 import { ui } from '@/content/ui';
 import { useLang } from '@/lib/i18n';
-import { useReducedMotion } from '@/lib/media';
 import { Navbar } from '@/components/layout/Navbar';
+import { PageTransition } from '@/components/layout/PageTransition';
 import { HeroSection } from '@/components/sections/hero/HeroSection';
 import { AboutSection } from '@/components/sections/about/AboutSection';
 import { ProjectsSection } from '@/components/sections/projects/ProjectsSection';
@@ -24,13 +24,16 @@ const SECTION_COMPONENTS: Record<SectionId, React.ComponentType> = {
 };
 
 export function ScrollLayout() {
-  const { t } = useLang();
-  const reducedMotion = useReducedMotion();
+  const { lang, t } = useLang();
+  const isRTL = lang === 'ar';
 
   const enabledSections = site.sections.filter((s) => s.enabled);
   const initialSection = enabledSections[0]?.id || 'home';
 
   const [activeSection, setActiveSection] = useState<SectionId>(initialSection);
+  const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
+  const [pendingSection, setPendingSection] = useState<SectionId | null>(null);
+  const [direction, setDirection] = useState<number>(1);
 
   useEffect(() => {
     if (typeof window !== 'undefined' && window.location.hash) {
@@ -67,15 +70,31 @@ export function ScrollLayout() {
   }, [enabledSections]);
 
   const handleNavigate = (sectionId: SectionId) => {
-    setActiveSection(sectionId);
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({
-        behavior: reducedMotion ? 'auto' : 'smooth',
-        block: 'start',
-      });
+    if (sectionId === activeSection || isTransitioning) return;
+    const currentIndex = enabledSections.findIndex((s) => s.id === activeSection);
+    const nextIndex = enabledSections.findIndex((s) => s.id === sectionId);
+    setDirection(nextIndex > currentIndex ? 1 : -1);
+    setPendingSection(sectionId);
+    setIsTransitioning(true);
+  };
+
+  const handleCurtainCovered = () => {
+    if (pendingSection) {
+      setActiveSection(pendingSection);
+      const element = document.getElementById(pendingSection);
+      if (element) {
+        element.scrollIntoView({ behavior: 'instant', block: 'start' });
+      }
     }
   };
+
+  const handleTransitionComplete = () => {
+    setIsTransitioning(false);
+    setPendingSection(null);
+  };
+
+  const targetSectionId = pendingSection || activeSection;
+  const targetSectionName = t(ui[`nav.${targetSectionId}`]);
 
   return (
     <>
@@ -95,6 +114,15 @@ export function ScrollLayout() {
       </main>
 
       <Navbar activeSection={activeSection} onNavigate={handleNavigate} />
+
+      <PageTransition
+        isTransitioning={isTransitioning}
+        targetSectionName={targetSectionName}
+        direction={direction}
+        isRTL={isRTL}
+        onCurtainCovered={handleCurtainCovered}
+        onTransitionComplete={handleTransitionComplete}
+      />
     </>
   );
 }
