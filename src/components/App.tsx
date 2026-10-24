@@ -2,7 +2,6 @@
 
 import React from 'react';
 import dynamic from 'next/dynamic';
-import { Toggles } from '@/components/layout/Toggles';
 import { ScrollLayout } from '@/components/layout/ScrollLayout';
 import { useMediaQuery, useIsMounted, TOUCH_QUERY } from '@/lib/media';
 import { useLang } from '@/lib/i18n';
@@ -20,7 +19,6 @@ export function App() {
 
   return (
     <div className="relative min-h-screen bg-bg text-text selection:bg-accent-soft selection:text-accent-text">
-      <Toggles />
       {!mounted || isTouch ? <ScrollLayout /> : <SectionSwitcher />}
       <footer className="py-8 text-center border-t border-border/60 text-xs text-text-muted">
         <p>
