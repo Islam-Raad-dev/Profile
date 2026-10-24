@@ -8,6 +8,7 @@ import { ui } from '@/content/ui';
 import { useLang } from '@/lib/i18n';
 import { useReducedMotion } from '@/lib/media';
 import { Navbar } from '@/components/layout/Navbar';
+import { PageTransition } from '@/components/layout/PageTransition';
 import { HeroSection } from '@/components/sections/hero/HeroSection';
 import { AboutSection } from '@/components/sections/about/AboutSection';
 import { ProjectsSection } from '@/components/sections/projects/ProjectsSection';
@@ -29,34 +30,31 @@ const slideVariants: Variants = {
     if (custom.reducedMotion) {
       return { opacity: 0 };
     }
-    const offset = 40 * custom.direction * (custom.isRTL ? -1 : 1);
+    const offset = 32 * custom.direction * (custom.isRTL ? -1 : 1);
     return {
       opacity: 0,
       x: offset,
-      filter: 'blur(8px)',
     };
   },
   center: {
     opacity: 1,
     x: 0,
-    filter: 'blur(0px)',
     transition: {
-      duration: 0.3,
-      ease: [0.4, 0, 0.2, 1],
+      duration: 0.25,
+      ease: [0.25, 1, 0.5, 1],
     },
   },
   exit: (custom: { direction: number; isRTL: boolean; reducedMotion: boolean }) => {
     if (custom.reducedMotion) {
       return { opacity: 0, transition: { duration: 0.15 } };
     }
-    const offset = -40 * custom.direction * (custom.isRTL ? -1 : 1);
+    const offset = -32 * custom.direction * (custom.isRTL ? -1 : 1);
     return {
       opacity: 0,
       x: offset,
-      filter: 'blur(8px)',
       transition: {
-        duration: 0.3,
-        ease: [0.4, 0, 0.2, 1],
+        duration: 0.2,
+        ease: [0.25, 1, 0.5, 1],
       },
     };
   },
@@ -84,30 +82,44 @@ export function SectionSwitcher() {
   });
 
   const [direction, setDirection] = useState<number>(1);
+  const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
+  const [pendingSection, setPendingSection] = useState<SectionId | null>(null);
 
   const navigateTo = useCallback(
     (targetId: SectionId) => {
-      if (targetId === activeSection) return;
+      if (targetId === activeSection || isTransitioning) return;
       const currentIndex = enabledSections.findIndex((s) => s.id === activeSection);
       const nextIndex = enabledSections.findIndex((s) => s.id === targetId);
       setDirection(nextIndex > currentIndex ? 1 : -1);
-      setActiveSection(targetId);
-      window.history.pushState(null, '', '#' + targetId);
-      window.scrollTo({ top: 0, behavior: 'instant' });
+      setPendingSection(targetId);
+      setIsTransitioning(true);
     },
-    [activeSection, enabledSections]
+    [activeSection, enabledSections, isTransitioning]
   );
+
+  const handleCurtainCovered = useCallback(() => {
+    if (pendingSection) {
+      setActiveSection(pendingSection);
+      window.history.pushState(null, '', '#' + pendingSection);
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+  }, [pendingSection]);
+
+  const handleTransitionComplete = useCallback(() => {
+    setIsTransitioning(false);
+    setPendingSection(null);
+  }, []);
 
   useEffect(() => {
     const handleHashChange = () => {
       const currentHash = (window.location.hash.replace('#', '') || initialSection) as SectionId;
       const valid = enabledSections.some((s) => s.id === currentHash);
-      if (valid && currentHash !== activeSection) {
+      if (valid && currentHash !== activeSection && !isTransitioning) {
         const currentIndex = enabledSections.findIndex((s) => s.id === activeSection);
         const nextIndex = enabledSections.findIndex((s) => s.id === currentHash);
         setDirection(nextIndex > currentIndex ? 1 : -1);
-        setActiveSection(currentHash);
-        window.scrollTo({ top: 0, behavior: 'instant' });
+        setPendingSection(currentHash);
+        setIsTransitioning(true);
       }
     };
 
@@ -117,7 +129,7 @@ export function SectionSwitcher() {
       window.removeEventListener('hashchange', handleHashChange);
       window.removeEventListener('popstate', handleHashChange);
     };
-  }, [activeSection, enabledSections, initialSection]);
+  }, [activeSection, enabledSections, initialSection, isTransitioning]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -158,6 +170,8 @@ export function SectionSwitcher() {
   }, [activeSection, enabledSections, isRTL, navigateTo]);
 
   const ActiveComponent = SECTION_COMPONENTS[activeSection] || HeroSection;
+  const targetSectionId = pendingSection || activeSection;
+  const targetSectionName = t(ui[`nav.${targetSectionId}`]);
 
   return (
     <>
@@ -188,6 +202,15 @@ export function SectionSwitcher() {
       </main>
 
       <Navbar activeSection={activeSection} onNavigate={navigateTo} />
+
+      <PageTransition
+        isTransitioning={isTransitioning}
+        targetSectionName={targetSectionName}
+        direction={direction}
+        isRTL={isRTL}
+        onCurtainCovered={handleCurtainCovered}
+        onTransitionComplete={handleTransitionComplete}
+      />
     </>
   );
 }
