@@ -4,8 +4,8 @@ export const site: SiteConfig = {
   sections: [
     { id: 'home', enabled: true },
     { id: 'about', enabled: true },
-    { id: 'projects', enabled: true },
     { id: 'skills', enabled: true },
+    { id: 'projects', enabled: true },
     { id: 'achievements', enabled: true },
     { id: 'contact', enabled: true },
   ],
