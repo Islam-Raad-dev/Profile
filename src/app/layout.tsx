@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Inter, Archivo_Black, Permanent_Marker, Cairo } from 'next/font/google';
+import { Inter, Archivo_Black, Permanent_Marker, Cairo, Caveat } from 'next/font/google';
 import { INIT_SCRIPT } from '@/lib/scripts';
 import { LangProvider } from '@/lib/i18n';
 import { ThemeProvider } from '@/lib/theme';
@@ -31,8 +31,14 @@ const cairo = Cairo({
   display: 'swap',
 });
 
+const caveat = Caveat({
+  subsets: ['latin'],
+  variable: '--font-caveat',
+  display: 'swap',
+});
+
 export const metadata: Metadata = {
-  title: 'Islam Raad - AI Engineering Student',
+  title: 'Islam Raad - AI Engineer',
   description:
     'Portfolio of Islam Raad, an AI Engineering student at the University of Mosul who builds AI-powered applications and backend systems.',
   icons: {
@@ -49,7 +55,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${inter.variable} ${archivo.variable} ${permanentMarker.variable} ${cairo.variable}`}
+      className={`dark ${inter.variable} ${archivo.variable} ${permanentMarker.variable} ${cairo.variable} ${caveat.variable}`}
     >
       <head>
         <script
@@ -57,7 +63,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: INIT_SCRIPT }}
         />
       </head>
-      <body>
+      <body suppressHydrationWarning>
         <ThemeProvider>
           <LangProvider>{children}</LangProvider>
         </ThemeProvider>
