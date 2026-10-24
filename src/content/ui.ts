@@ -44,8 +44,11 @@ export const ui: Record<string, L> = {
   'contact.required': { en: 'This field is required.', ar: 'هذا الحقل مطلوب.' },
   'contact.disabled': { en: "The form isn't available right now. Please email me directly.", ar: 'النموذج غير متاح حالياً. يرجى مراسلتي مباشرة عبر البريد الإلكتروني.' },
   'toggle.lang': { en: 'Switch language', ar: 'تغيير اللغة' },
+  'toggle.lang.label': { en: 'العربية', ar: 'English' },
   'toggle.theme': { en: 'Switch theme', ar: 'تغيير المظهر' },
+  'toggle.theme.dark': { en: 'Dark Mode', ar: 'الوضع الداكن' },
+  'toggle.theme.light': { en: 'Light Mode', ar: 'الوضع الفاتح' },
   'a11y.skip': { en: 'Skip to content', ar: 'تخطَّ إلى المحتوى' },
   'comingSoon': { en: 'More projects coming soon', ar: 'المزيد من المشاريع قريباً' },
-  'footer': { en: 'Islam Raad', ar: 'إسلام رعد' },
+  'footer': { en: 'Islam Raad', ar: 'إسلام رعــــد' },
 };
