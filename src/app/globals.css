@@ -58,6 +58,7 @@
   --font-body: var(--font-inter);
   --font-display: var(--font-archivo);
   --font-handwriting: var(--font-marker);
+  --font-caveat: var(--font-caveat);
 
   --radius-sm: var(--radius-sm);
   --radius-md: var(--radius-md);
@@ -71,6 +72,7 @@ html[lang="ar"] {
   --font-body: var(--font-cairo);
   --font-display: var(--font-cairo);
   --font-handwriting: var(--font-cairo);
+  --font-caveat: var(--font-cairo);
 }
 
 html[lang="ar"] .uppercase {
@@ -106,11 +108,78 @@ body {
   transition: background-color var(--dur-fast) ease, color var(--dur-fast) ease;
 }
 
+.letter-handwriting-path {
+  stroke-dasharray: 280;
+  stroke-dashoffset: 280;
+  animation: letter-write-draw 0.35s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  animation-delay: calc(0.12s + var(--char-idx, 0) * 0.045s);
+  will-change: stroke-dashoffset, fill;
+}
+
+@keyframes letter-write-draw {
+  0% {
+    stroke-dashoffset: 280;
+    fill: transparent;
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+    stroke-dashoffset: 250;
+    fill: transparent;
+  }
+  70% {
+    stroke-dashoffset: 0;
+    fill: transparent;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    fill: var(--text);
+    opacity: 1;
+  }
+}
+
+.arabic-handwriting-path {
+  stroke-dasharray: 850;
+  stroke-dashoffset: 850;
+  animation: arabic-write-draw 0.45s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  animation-delay: 0.12s;
+  will-change: stroke-dashoffset, fill;
+}
+
+@keyframes arabic-write-draw {
+  0% {
+    stroke-dashoffset: 850;
+    fill: transparent;
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+    stroke-dashoffset: 700;
+    fill: transparent;
+  }
+  75% {
+    stroke-dashoffset: 0;
+    fill: transparent;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    fill: var(--text);
+    opacity: 1;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, ::before, ::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  .letter-handwriting-path,
+  .arabic-handwriting-path {
+    stroke-dashoffset: 0 !important;
+    fill: var(--text) !important;
+    opacity: 1 !important;
   }
 }
