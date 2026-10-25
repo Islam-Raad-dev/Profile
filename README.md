@@ -169,7 +169,6 @@ export const site: SiteConfig = {
 - **GitHub:** [@Islam-Raad-dev](https://github.com/Islam-Raad-dev)
 - **LinkedIn:** [islam-raad](https://www.linkedin.com/in/islam-raad/)
 - **Email:** [islamraad.dev@gmail.com](mailto:islamraad.dev@gmail.com)
-- **WhatsApp:** [+964 777 938 9549](https://wa.me/9647779389549)
 - **Curriculum Vitae:** [View CV](https://drive.google.com/file/d/1w0npwNUG9-88IZCcxWLuoOWYqjwyGfSC/view?usp=sharing)
 
 ---
