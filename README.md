@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🌐 Islam Raad — Personal Portfolio
+#  Islam Raad — Personal Portfolio
 ### Ultra-Fast, Bilingual (EN/AR), Data-Driven Developer Portfolio & Showcase
 
 [![Next.js](https://img.shields.io/badge/Next.js-16.4-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
@@ -31,44 +31,42 @@ This repository houses the personal portfolio of **Islam Raad**, an AI Engineeri
 
 Engineered with modern frontend standards, this portfolio delivers an ultra-fast, static-first experience with zero server overhead. It features **native bilingual support (English and Arabic RTL)**, **system-aware dark/light theme switching with zero flash**, and an **adaptive multi-mode layout** that seamlessly switches between a desktop interactive section switcher and a mobile-friendly smooth scroll view.
 
-> **العربية:** مستودع الموقع الشخصي ومعرض الأعمال الخاص بـ **إسلام رعد** (طالب هندسة الذكاء الاصطناعي في جامعة الموصل). مصمم وفق أحدث المعايير العالمية ليقدم تجربة تصفح فائقة السرعة، ثنائية اللغة بالكامل (عربي/إنجليزي)، مع دعم كامل لاتجاه RTL والوضع الليلي/النهاري، وتصميم متجاوب وتفاعلي.
-
 ---
 
-## ✨ Key Features
+## Key Features
 
-### 🌐 Bilingual & True RTL First-Class Support
+### Bilingual & True RTL First-Class Support
 - **Seamless EN ⇄ AR Toggling:** Zero-layout shift instant switching.
 - **True RTL Architecture:** Uses CSS logical properties (`ms-`, `pe-`, `start-`, `end-`) and directional flips (`rtl:rotate-180`) to provide an authentic Arabic typography and reading flow.
 - **Dynamic Font Switching:** Pairs **Inter**, **Archivo Black**, and **Permanent Marker** for English with the elegant **Cairo** typeface for Arabic.
 - **Zero Hydration Flicker:** Language and direction (`dir="rtl"`) are resolved prior to paint via an inline initialization script.
 
-### 🌓 Zero-Flicker Theme Engine
+### Zero-Flicker Theme Engine
 - Instant dark and light theme detection based on system preferences (`prefers-color-scheme`) or explicit user preference (`localStorage`).
 - Class-based theme management using Tailwind CSS v4 CSS variables (`@theme`).
 - Custom performance-oriented `html[data-lite]` attributes for mobile devices to drop heavy backdrop blurs and optimize GPU performance.
 
-### 🖥️ Adaptive Multi-Mode Layout Engine
+### Adaptive Multi-Mode Layout Engine
 - **Desktop (Fine-Pointer):** Card-based **Interactive Section Switcher** powered by `motion/react`. Sections animate with directional slide transitions (RTL-aware) and sync directly with URL hashes (`#projects`, `#about`), with full keyboard navigation support (`ArrowLeft` / `ArrowRight`).
 - **Mobile & Touch:** Automatically adapts to a single-page **Smooth Scroll Layout** featuring an `IntersectionObserver` scroll-spy navigation pill.
 - **No Hydration Inconsistencies:** Media queries dynamically mount the appropriate layout post-hydration.
 
-### 🧩 100% Data-Driven Architecture
+### 100% Data-Driven Architecture
 - **Strict Separation of Concerns:** Content is decoupled from presentation. All text, projects, skills, education, and UI strings reside in strongly-typed files inside `src/content/`.
 - **Zero Hardcoded Text:** Adding a new project or updating skills never requires touching React components.
 
-### 📬 Serverless Contact System
+### Serverless Contact System
 - Direct integration with Formspree for static-site form submissions.
 - Built-in honeypot spam protection, client-side email validation, localized success/error states, and direct fallbacks (Email, WhatsApp, LinkedIn, GitHub).
 
-### ♿ Accessibility & Performance by Design
+### Accessibility & Performance by Design
 - Fully accessible modal dialogs with focus trapping, `Esc` key dismissals, backdrop handling, and focus returns.
 - Full compliance with `prefers-reduced-motion` for motion-sensitive visitors.
 - Validated contrast ratios meeting WCAG AA standards in both light and dark palettes.
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Category | Technology | Description |
 |---|---|---|
@@ -83,7 +81,7 @@ Engineered with modern frontend standards, this portfolio delivers an ultra-fast
 
 ---
 
-## 🏗️ Architecture & Structure
+## Architecture & Structure
 
 ```text
 islam-raad-portfolio/
@@ -121,64 +119,7 @@ islam-raad-portfolio/
 
 ---
 
-## 🚀 Getting Started
-
-### Prerequisites
-
-- **Node.js**: `v20.x` or `v22.x` (recommended)
-- **Package Manager**: `npm` (v10+)
-
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/Islam-Raad-dev/Profile_.git
-cd Profile_
-```
-
-### 2. Install Dependencies
-
-```bash
-npm install
-```
-
-### 3. Setup Environment Variables
-
-Copy the example environment configuration:
-
-```bash
-cp .env.example .env.local
-```
-
-Edit `.env.local` to configure your Formspree Form ID:
-
-```env
-NEXT_PUBLIC_FORMSPREE_ID=your_formspree_id_here
-```
-
-*(Note: If omitted, the contact form gracefully disables itself and directs users to your direct email and WhatsApp).*
-
-### 4. Run the Development Server
-
-```bash
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) in your browser.
-
-### 5. Production Build & Static Export
-
-To verify TypeScript, ESLint, and compile the static bundle:
-
-```bash
-npm run lint
-npm run build
-```
-
-The output will be generated inside the `out/` directory, ready to be hosted on any static web server or CDN.
-
----
-
-## ✍️ Content Management
+## Content Management
 
 The portfolio is designed so you never need to edit React components to update your information.
 
@@ -220,19 +161,15 @@ export const site: SiteConfig = {
 
 ---
 
-## 👨‍💻 Author & Connect
+## Author & Connect
 
 **Islam Raad (إسلام رعد)**  
 *AI Engineering Student • University of Mosul*
 
-- 🐙 **GitHub:** [@Islam-Raad-dev](https://github.com/Islam-Raad-dev)
-- 💼 **LinkedIn:** [islam-raad](https://www.linkedin.com/in/islam-raad/)
-- 📧 **Email:** [islamraad.dev@gmail.com](mailto:islamraad.dev@gmail.com)
-- 💬 **WhatsApp:** [+964 777 938 9549](https://wa.me/9647779389549)
-- 📄 **Curriculum Vitae:** [View CV](https://drive.google.com/file/d/1w0npwNUG9-88IZCcxWLuoOWYqjwyGfSC/view?usp=sharing)
+- **GitHub:** [@Islam-Raad-dev](https://github.com/Islam-Raad-dev)
+- **LinkedIn:** [islam-raad](https://www.linkedin.com/in/islam-raad/)
+- **Email:** [islamraad.dev@gmail.com](mailto:islamraad.dev@gmail.com)
+- **WhatsApp:** [+964 777 938 9549](https://wa.me/9647779389549)
+- **Curriculum Vitae:** [View CV](https://drive.google.com/file/d/1w0npwNUG9-88IZCcxWLuoOWYqjwyGfSC/view?usp=sharing)
 
 ---
-
-## 📄 License
-
-This project is open-source under the [MIT License](LICENSE). Feel free to customize it for your own portfolio.
