@@ -27,7 +27,10 @@ function AchievementCard({ achievement }: { achievement: Achievement }) {
   const { t } = useLang();
 
   return (
-    <div className="group relative flex flex-col justify-between p-6 rounded-2xl bg-card border border-border backdrop-blur-glass shadow-card hover:border-accent hover:-translate-y-1 hover:shadow-xl transition-all duration-200 text-start h-full">
+    <div
+      id={`achievement-${achievement.id}`}
+      className="group relative flex flex-col justify-between p-6 rounded-2xl bg-card border border-border backdrop-blur-glass shadow-card hover:border-accent hover:-translate-y-1 hover:shadow-xl transition-all duration-300 text-start h-full scroll-mt-24 sm:scroll-mt-32 target:ring-2 target:ring-accent target:border-accent"
+    >
       <div>
         <div className="flex items-start justify-between gap-3 mb-3">
           <div className="w-10 h-10 rounded-xl bg-accent-soft border border-[rgba(51,149,255,0.25)] flex items-center justify-center shrink-0">
