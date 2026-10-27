@@ -123,13 +123,22 @@ export function SectionSwitcher() {
       }
     };
 
+    const handleCustomNavigate = (e: Event) => {
+      const custom = e as CustomEvent<{ sectionId: SectionId; elementId?: string }>;
+      if (custom.detail?.sectionId) {
+        navigateTo(custom.detail.sectionId);
+      }
+    };
+
     window.addEventListener('hashchange', handleHashChange);
     window.addEventListener('popstate', handleHashChange);
+    window.addEventListener('app-navigate-section', handleCustomNavigate);
     return () => {
       window.removeEventListener('hashchange', handleHashChange);
       window.removeEventListener('popstate', handleHashChange);
+      window.removeEventListener('app-navigate-section', handleCustomNavigate);
     };
-  }, [activeSection, enabledSections, initialSection, isTransitioning]);
+  }, [activeSection, enabledSections, initialSection, isTransitioning, navigateTo]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -184,7 +193,11 @@ export function SectionSwitcher() {
 
       <main
         id="main-content"
-        className="min-h-[calc(100vh-140px)] flex flex-col justify-center pb-28 md:pb-36 overflow-x-hidden"
+        className={`flex flex-col justify-center overflow-x-hidden ${
+          activeSection === 'home'
+            ? 'min-h-screen pb-0'
+            : 'min-h-[calc(100vh-140px)] pb-28 md:pb-36'
+        }`}
       >
         <AnimatePresence mode="wait" custom={{ direction, isRTL, reducedMotion }}>
           <motion.div
@@ -197,6 +210,13 @@ export function SectionSwitcher() {
             className="w-full"
           >
             <ActiveComponent />
+            {activeSection === 'contact' && (
+              <footer className="mt-8 text-center text-xs text-text-muted">
+                <p>
+                  © {new Date().getFullYear()} {t(ui.footer)}
+                </p>
+              </footer>
+            )}
           </motion.div>
         </AnimatePresence>
       </main>
