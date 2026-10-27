@@ -15,6 +15,7 @@
   --accent-soft: rgba(51, 149, 255, 0.12);
   --gradient: linear-gradient(135deg, var(--accent), var(--accent-2));
   --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.08);
+  --neural-node: #0a64cc;
 
   --radius-sm: 10px;
   --radius-md: 14px;
@@ -41,6 +42,7 @@
   --accent-2: #6366f1;
   --accent-soft: rgba(51, 149, 255, 0.12);
   --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.30);
+  --neural-node: #60a5fa;
 }
 
 @theme {
