@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import type { SectionId } from '@/types';
 import { site } from '@/content/site';
 import { ui } from '@/content/ui';
@@ -34,6 +34,18 @@ export function ScrollLayout() {
   const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
   const [pendingSection, setPendingSection] = useState<SectionId | null>(null);
   const [direction, setDirection] = useState<number>(1);
+
+  const handleNavigate = useCallback(
+    (sectionId: SectionId) => {
+      if (sectionId === activeSection || isTransitioning) return;
+      const currentIndex = enabledSections.findIndex((s) => s.id === activeSection);
+      const nextIndex = enabledSections.findIndex((s) => s.id === sectionId);
+      setDirection(nextIndex > currentIndex ? 1 : -1);
+      setPendingSection(sectionId);
+      setIsTransitioning(true);
+    },
+    [activeSection, enabledSections, isTransitioning]
+  );
 
   useEffect(() => {
     if (typeof window !== 'undefined' && window.location.hash) {
@@ -69,14 +81,18 @@ export function ScrollLayout() {
     return () => observer.disconnect();
   }, [enabledSections]);
 
-  const handleNavigate = (sectionId: SectionId) => {
-    if (sectionId === activeSection || isTransitioning) return;
-    const currentIndex = enabledSections.findIndex((s) => s.id === activeSection);
-    const nextIndex = enabledSections.findIndex((s) => s.id === sectionId);
-    setDirection(nextIndex > currentIndex ? 1 : -1);
-    setPendingSection(sectionId);
-    setIsTransitioning(true);
-  };
+  useEffect(() => {
+    const handleCustomNavigate = (e: Event) => {
+      const custom = e as CustomEvent<{ sectionId: SectionId; elementId?: string }>;
+      if (custom.detail?.sectionId) {
+        handleNavigate(custom.detail.sectionId);
+      }
+    };
+    window.addEventListener('app-navigate-section', handleCustomNavigate);
+    return () => {
+      window.removeEventListener('app-navigate-section', handleCustomNavigate);
+    };
+  }, [handleNavigate]);
 
   const handleCurtainCovered = () => {
     if (pendingSection) {
