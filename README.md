@@ -1,7 +1,7 @@
 <div align="center">
 
 #  Islam Raad — Personal Portfolio
-### Ultra-Fast, Bilingual (EN/AR), Data-Driven Developer Portfolio & Showcase
+### My Ultra-Fast, Portfolio & Showcase
 
 [![Next.js](https://img.shields.io/badge/Next.js-16.4-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19.3-blue?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
@@ -11,15 +11,6 @@
 [![Netlify](https://img.shields.io/badge/Deploy-Netlify-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)](https://www.netlify.com/)
 [![Bilingual](https://img.shields.io/badge/Language-EN%20%7C%20AR%20(RTL)-orange?style=for-the-badge)](#-bilingual--true-rtl)
 
-<p align="center">
-  <a href="#-overview">Overview</a> •
-  <a href="#-key-features">Key Features</a> •
-  <a href="#-tech-stack">Tech Stack</a> •
-  <a href="#-architecture--structure">Architecture</a> •
-  <a href="#-getting-started">Getting Started</a> •
-  <a href="#-content-management">Content Management</a> •
-  <a href="#-connect--author">Author</a>
-</p>
 
 ---
 
@@ -158,17 +149,5 @@ export const site: SiteConfig = {
   // ...
 };
 ```
-
----
-
-## Author & Connect
-
-**Islam Raad (إسلام رعد)**  
-*AI Engineering Student • University of Mosul*
-
-- **GitHub:** [@Islam-Raad-dev](https://github.com/Islam-Raad-dev)
-- **LinkedIn:** [islam-raad](https://www.linkedin.com/in/islam-raad/)
-- **Email:** [islamraad.dev@gmail.com](mailto:islamraad.dev@gmail.com)
-- **Curriculum Vitae:** [View CV](https://drive.google.com/file/d/1w0npwNUG9-88IZCcxWLuoOWYqjwyGfSC/view?usp=sharing)
 
 ---
