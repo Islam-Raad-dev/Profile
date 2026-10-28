@@ -15,6 +15,7 @@ export const skills: Skill[] = [
   { id: 'css', name: 'CSS', icon: 'css', category: 'frontend' },
   { id: 'vite', name: 'Vite', icon: 'vite', category: 'frontend' },
 
+  { id: 'tensorflow', name: 'TensorFlow', icon: 'tensorflow', category: 'ai', featured: true },
   { id: 'pytorch', name: 'PyTorch', icon: 'pytorch', category: 'ai', featured: true },
   { id: 'scikitlearn', name: 'scikit-learn', icon: 'scikitlearn', category: 'ai', featured: true },
   { id: 'numpy', name: 'NumPy', icon: 'numpy', category: 'ai' },

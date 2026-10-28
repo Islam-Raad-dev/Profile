@@ -1,19 +1,17 @@
 'use client';
 
-import { useSyncExternalStore } from 'react';
+import { useState, useEffect, useSyncExternalStore } from 'react';
 
 export const PHONE_QUERY = '(max-width: 767px)';
 export const TOUCH_QUERY = '(max-width: 767px), (any-pointer: coarse)';
 export const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
 
-const emptySubscribe = () => () => {};
-
 export function useIsMounted(): boolean {
-  return useSyncExternalStore(
-    emptySubscribe,
-    () => true,
-    () => false
-  );
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  return mounted;
 }
 
 export function useMediaQuery(query: string): boolean {
@@ -36,4 +34,10 @@ export function useMediaQuery(query: string): boolean {
 
 export function useReducedMotion(): boolean {
   return useMediaQuery(REDUCED_MOTION_QUERY);
+}
+
+export function useSectionSwitcherLayout(): boolean {
+  const mounted = useIsMounted();
+  const isTouch = useMediaQuery(TOUCH_QUERY);
+  return mounted && !isTouch;
 }

@@ -67,3 +67,32 @@ export type SiteConfig = {
   linkedin: string;
   cvUrl: string;
 };
+
+export type DigitalCvEntry = {
+  id: string;
+  title: L;
+  subtitle?: L;
+  period?: L;
+  badge?: L;
+  targetSection?: SectionId;
+  targetElementId?: string;
+  externalUrl?: string;
+};
+
+export type DigitalCvData = {
+  title: L;
+  role: L;
+  location: L;
+  email: string;
+  phone: string;
+  overview: L;
+  stack: string[];
+  impact: L[];
+  projects: DigitalCvEntry[];
+  academic: DigitalCvEntry[];
+  programs: DigitalCvEntry[];
+  certificates: DigitalCvEntry[];
+  languages: L;
+  engineeredWith: L;
+};
+

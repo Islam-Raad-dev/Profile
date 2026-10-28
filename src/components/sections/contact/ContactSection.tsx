@@ -9,13 +9,14 @@ import { Button } from '@/components/ui/Button';
 import { Reveal } from '@/components/ui/Reveal';
 import {
   Mail,
-  Download,
+  FileText,
   ExternalLink,
   Send,
   Loader2,
   CheckCircle2,
   AlertCircle,
 } from 'lucide-react';
+import { openDigitalCv } from '@/lib/cvNavigation';
 
 function WhatsAppIcon({ className }: { className?: string }) {
   return (
@@ -159,11 +160,11 @@ export function ContactSection() {
     },
     {
       id: 'cv',
-      label: t(ui['cta.downloadCv']),
-      href: site.cvUrl,
-      icon: <Download className="w-5 h-5 text-accent-text" />,
+      label: t(ui['cta.viewCv']),
+      href: '/Islam_Raad Fathi_resume.pdf',
+      icon: <FileText className="w-5 h-5 text-accent-text" />,
       sublabel: 'Curriculum Vitae',
-      external: true,
+      onClick: openDigitalCv,
     },
   ];
 
@@ -186,9 +187,17 @@ export function ContactSection() {
             <a
               key={method.id}
               href={method.href}
+              onClick={
+                method.onClick
+                  ? (e) => {
+                      e.preventDefault();
+                      method.onClick?.();
+                    }
+                  : undefined
+              }
               target={method.external ? '_blank' : undefined}
               rel={method.external ? 'noopener noreferrer' : undefined}
-              className="group flex items-center justify-between p-4 rounded-2xl bg-card border border-border backdrop-blur-glass shadow-card hover:border-accent hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+              className="group flex items-center justify-between p-4 rounded-2xl bg-card border border-border backdrop-blur-glass shadow-card hover:border-accent hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent cursor-pointer"
             >
               <div className="flex items-center gap-3.5 min-w-0">
                 <div className="w-10 h-10 rounded-xl bg-accent-soft border border-[rgba(51,149,255,0.25)] flex items-center justify-center shrink-0">

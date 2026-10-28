@@ -24,10 +24,11 @@ export function ProjectCard({ project, onSelect }: ProjectCardProps) {
 
   return (
     <button
+      id={`project-${project.id}`}
       ref={cardRef}
       type="button"
       onClick={() => onSelect(project, cardRef)}
-      className="group relative w-full flex flex-col text-start rounded-2xl border border-border bg-card backdrop-blur-glass shadow-card hover:shadow-xl hover:border-accent hover:-translate-y-1 transition-all duration-200 overflow-hidden cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+      className="group relative w-full flex flex-col text-start rounded-2xl border border-border bg-card backdrop-blur-glass shadow-card hover:shadow-xl hover:border-accent hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer scroll-mt-24 sm:scroll-mt-32 target:ring-2 target:ring-accent target:border-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
     >
       {project.featured && (
         <div className="absolute top-3 start-3 z-10 flex items-center gap-1 px-2.5 py-1 rounded-full bg-accent-soft/90 backdrop-blur-md border border-[rgba(51,149,255,0.3)] text-accent-text text-xs font-semibold shadow-sm">
