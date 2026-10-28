@@ -94,6 +94,12 @@ Schedule
 
 ---
 
+## Enhancements (owner requests after Phase 5)
+- [x] Digital CV ("Fast Report") modal with deep links to Projects/Achievements cards
+- [x] Hero "Soft Elastic Neural Grid" canvas background (replaces the static SVG grid; static under reduced motion)
+
+---
+
 ## After launch (owner, no agent needed beyond `/add-project`)
 - [ ] Add projects 3 to 5 when ready
 - [ ] Add screenshots for Napta and Social Media App
