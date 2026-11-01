@@ -12,7 +12,8 @@ import { TechLogo } from '@/components/ui/TechLogo';
 import { Button } from '@/components/ui/Button';
 import { Chip } from '@/components/ui/Chip';
 import { ProjectCover } from './ProjectCover';
-import { X, ExternalLink, Trophy } from 'lucide-react';
+import { ModalCloseButton } from '@/components/ui/ModalCloseButton';
+import { ExternalLink, Trophy } from 'lucide-react';
 
 interface ProjectModalProps {
   project: Project | null;
@@ -114,15 +115,12 @@ export function ProjectModal({
             className="relative w-full max-w-2xl bg-card border border-border rounded-3xl shadow-2xl overflow-hidden z-10 text-start max-h-[85vh] flex flex-col my-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            <button
+            <ModalCloseButton
               ref={closeBtnRef}
-              type="button"
               onClick={onClose}
-              aria-label={t(ui['project.close'])}
-              className="absolute top-4 end-4 z-20 w-10 h-10 rounded-full bg-card/85 border border-border backdrop-blur-md flex items-center justify-center text-text hover:text-accent-text hover:border-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent shadow-md cursor-pointer"
-            >
-              <X className="w-5 h-5" />
-            </button>
+              ariaLabel={t(ui['project.close'])}
+              className="absolute top-4 end-4 z-20"
+            />
 
             <div className="overflow-y-auto w-full overscroll-contain">
               <ProjectCover
