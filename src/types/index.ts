@@ -28,13 +28,57 @@ export type Project = {
   badge?: L;
 };
 
+export type AchievementCategory = 'achievement' | 'program_cert';
+
+export type MilestoneStage = 'achievements' | 'programs_certs' | 'volunteering';
+
+export type AchievementProject = {
+  name: L;
+  description?: L;
+  portfolioProjectId?: string;
+  repoUrl?: string;
+  liveUrl?: string;
+};
+
+export type AchievementPeriod = {
+  start: L;
+  end?: L;
+  isOngoing?: boolean;
+};
+
 export type Achievement = {
   id: string;
-  kind: 'award' | 'program' | 'certificate';
+  category: AchievementCategory;
+  kind: 'award' | 'program' | 'certificate' | 'course' | 'honor';
   title: L;
   issuer?: L;
   status?: L;
   note?: L;
+  period?: AchievementPeriod;
+  badge?: L;
+  rating?: number;
+  overview?: L;
+  learnings?: L[];
+  projects?: AchievementProject[];
+  courseUrl?: string;
+  repoUrl?: string;
+  certificateUrl?: string;
+  hasCertificate?: boolean;
+  subCourses?: L[];
+  synergyStack?: string[];
+  credentialHash?: string;
+};
+
+export type VolunteeringItem = {
+  id: string;
+  role: L;
+  organization: L;
+  period: L;
+  location: L;
+  description: L;
+  highlight?: L;
+  credentialHash?: string;
+  synergyStack?: string[];
 };
 
 export type TimelineItem = {
