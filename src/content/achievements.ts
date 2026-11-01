@@ -19,7 +19,7 @@ export const achievements: Achievement[] = [
     },
     badge: {
       en: '1st Place Nationwide',
-      ar: 'المركز الأول عراقياً',
+      ar: 'المركز الأول على مستوى العراق',
     },
     status: {
       en: '1st place',
@@ -28,7 +28,7 @@ export const achievements: Achievement[] = [
     rating: 5,
     overview: {
       en: 'Competed in "Iqra Litartaqi", a nationwide reading competition organized by Rawafid Youth Center, evaluated on comprehensive knowledge of volunteer literature, achieving 1st place across Iraq.',
-      ar: 'المشاركة في مسابقة «اقرأ لترتقِ» الوطنية للقراءة المنظمة من مركز روافد الشبابي في بغداد حول أدبيات العمل التطوعي، ونيل المركز الأول على مستوى عموم العراق.',
+      ar: 'المشاركة في مسابقة «اقرأ لترتقِ» الوطنية للقراءة المنظمة من مركز روافد الشبابي في بغداد حول أدبيات العمل التطوعي، ونيل المركز الأول على مستوى العراق.',
     },
     learnings: [
       {
