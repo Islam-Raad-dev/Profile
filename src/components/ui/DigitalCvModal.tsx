@@ -15,8 +15,8 @@ import {
   closeDigitalCv,
   navigateToSectionItem,
 } from '@/lib/cvNavigation';
+import { ModalCloseButton } from '@/components/ui/ModalCloseButton';
 import {
-  X,
   FileText,
   Download,
   Mail,
@@ -150,15 +150,12 @@ export function DigitalCvModal() {
                   <span className="hidden sm:inline">{t(ui['cta.downloadPdf'])}</span>
                 </a>
 
-                <button
+                <ModalCloseButton
                   ref={closeBtnRef}
-                  type="button"
                   onClick={closeDigitalCv}
-                  aria-label={t(ui['cv.close'])}
-                  className="w-8 h-8 rounded-full bg-surface border border-border flex items-center justify-center text-text hover:text-accent-text hover:border-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent cursor-pointer"
-                >
-                  <X className="w-4 h-4" />
-                </button>
+                  ariaLabel={t(ui['cv.close'])}
+                  size="sm"
+                />
               </div>
             </div>
 
