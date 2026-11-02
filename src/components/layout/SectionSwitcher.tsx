@@ -84,10 +84,16 @@ export function SectionSwitcher() {
   const [direction, setDirection] = useState<number>(1);
   const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
   const [pendingSection, setPendingSection] = useState<SectionId | null>(null);
+  const [scrollAttempt, setScrollAttempt] = useState<{
+    direction: 'down' | 'up';
+    targetId: SectionId;
+  } | null>(null);
 
   const lastTransitionTimeRef = useRef<number>(0);
   const accumulatedDeltaRef = useRef<number>(0);
   const deltaResetTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const scrollAttemptTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const lastAttemptTimeRef = useRef<number>(0);
   const touchStartYRef = useRef<number | null>(null);
   const touchStartXRef = useRef<number | null>(null);
 
@@ -107,6 +113,10 @@ export function SectionSwitcher() {
       if (now - lastTransitionTimeRef.current < 850) return;
       lastTransitionTimeRef.current = now;
       accumulatedDeltaRef.current = 0;
+      setScrollAttempt(null);
+      if (scrollAttemptTimeoutRef.current) {
+        clearTimeout(scrollAttemptTimeoutRef.current);
+      }
 
       const currentIndex = enabledSections.findIndex((s) => s.id === activeSection);
       const nextIndex = enabledSections.findIndex((s) => s.id === targetId);
@@ -115,6 +125,41 @@ export function SectionSwitcher() {
       setIsTransitioning(true);
     },
     [activeSection, enabledSections, isTransitioning]
+  );
+
+  const registerScrollAttempt = useCallback(
+    (dir: 'down' | 'up', targetId: SectionId) => {
+      const now = Date.now();
+
+      if (
+        scrollAttempt &&
+        scrollAttempt.direction === dir &&
+        scrollAttempt.targetId === targetId &&
+        now - lastAttemptTimeRef.current >= 240
+      ) {
+        if (scrollAttemptTimeoutRef.current) {
+          clearTimeout(scrollAttemptTimeoutRef.current);
+        }
+        setScrollAttempt(null);
+        lastAttemptTimeRef.current = 0;
+        navigateTo(targetId);
+        return;
+      }
+
+      if (!scrollAttempt || scrollAttempt.direction !== dir) {
+        lastAttemptTimeRef.current = now;
+        setScrollAttempt({ direction: dir, targetId });
+
+        if (scrollAttemptTimeoutRef.current) {
+          clearTimeout(scrollAttemptTimeoutRef.current);
+        }
+        scrollAttemptTimeoutRef.current = setTimeout(() => {
+          setScrollAttempt(null);
+          lastAttemptTimeRef.current = 0;
+        }, 1400);
+      }
+    },
+    [navigateTo, scrollAttempt]
   );
 
   const handleCurtainCovered = useCallback(() => {
@@ -211,7 +256,7 @@ export function SectionSwitcher() {
         accumulatedDeltaRef.current += e.deltaY;
         if (accumulatedDeltaRef.current >= 45) {
           accumulatedDeltaRef.current = 0;
-          navigateTo(enabledSections[currentIndex + 1].id);
+          registerScrollAttempt('down', enabledSections[currentIndex + 1].id);
         }
       } else if (e.deltaY < 0) {
         if (!isAtTop) {
@@ -231,7 +276,7 @@ export function SectionSwitcher() {
         accumulatedDeltaRef.current += e.deltaY;
         if (accumulatedDeltaRef.current <= -45) {
           accumulatedDeltaRef.current = 0;
-          navigateTo(enabledSections[currentIndex - 1].id);
+          registerScrollAttempt('up', enabledSections[currentIndex - 1].id);
         }
       }
     };
@@ -242,8 +287,11 @@ export function SectionSwitcher() {
       if (deltaResetTimerRef.current) {
         clearTimeout(deltaResetTimerRef.current);
       }
+      if (scrollAttemptTimeoutRef.current) {
+        clearTimeout(scrollAttemptTimeoutRef.current);
+      }
     };
-  }, [activeSection, checkScrollBoundaries, enabledSections, isTransitioning, navigateTo]);
+  }, [activeSection, checkScrollBoundaries, enabledSections, isTransitioning, registerScrollAttempt]);
 
   useEffect(() => {
     const handleTouchStart = (e: TouchEvent) => {
@@ -292,7 +340,7 @@ export function SectionSwitcher() {
           }
         }
         if (currentIndex < enabledSections.length - 1) {
-          navigateTo(enabledSections[currentIndex + 1].id);
+          registerScrollAttempt('down', enabledSections[currentIndex + 1].id);
         }
       } else if (deltaY < 0) {
         if (!isAtTop) return;
@@ -303,7 +351,7 @@ export function SectionSwitcher() {
           }
         }
         if (currentIndex > 0) {
-          navigateTo(enabledSections[currentIndex - 1].id);
+          registerScrollAttempt('up', enabledSections[currentIndex - 1].id);
         }
       }
     };
@@ -315,7 +363,7 @@ export function SectionSwitcher() {
       window.removeEventListener('touchstart', handleTouchStart);
       window.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [activeSection, checkScrollBoundaries, enabledSections, isTransitioning, navigateTo]);
+  }, [activeSection, checkScrollBoundaries, enabledSections, isTransitioning, registerScrollAttempt]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -359,7 +407,7 @@ export function SectionSwitcher() {
           }
           if (currentIndex < enabledSections.length - 1) {
             e.preventDefault();
-            navigateTo(enabledSections[currentIndex + 1].id);
+            registerScrollAttempt('down', enabledSections[currentIndex + 1].id);
           }
         }
       } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
@@ -373,7 +421,7 @@ export function SectionSwitcher() {
           }
           if (currentIndex > 0) {
             e.preventDefault();
-            navigateTo(enabledSections[currentIndex - 1].id);
+            registerScrollAttempt('up', enabledSections[currentIndex - 1].id);
           }
         }
       }
@@ -381,7 +429,7 @@ export function SectionSwitcher() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [activeSection, checkScrollBoundaries, enabledSections, isRTL, navigateTo]);
+  }, [activeSection, checkScrollBoundaries, enabledSections, isRTL, navigateTo, registerScrollAttempt]);
 
   const ActiveComponent = SECTION_COMPONENTS[activeSection] || HeroSection;
   const targetSectionId = pendingSection || activeSection;
@@ -425,6 +473,33 @@ export function SectionSwitcher() {
           </motion.div>
         </AnimatePresence>
       </main>
+
+      <AnimatePresence>
+        {scrollAttempt && !isTransitioning && (
+          <motion.div
+            initial={{ opacity: 0, y: 12, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 8, scale: 0.95 }}
+            transition={{ duration: 0.18 }}
+            className="fixed bottom-20 md:bottom-24 left-1/2 -translate-x-1/2 z-50 pointer-events-none select-none max-w-[90vw]"
+          >
+            <div className="flex items-center gap-2.5 px-4 py-2 rounded-full bg-card/95 backdrop-blur-xl border border-accent/40 shadow-card text-xs font-medium text-text">
+              <div className="flex items-center gap-1 shrink-0">
+                <span className="w-2 h-2 rounded-full bg-accent shadow-[0_0_8px_rgba(51,149,255,0.8)] animate-pulse" />
+                <span className="w-2 h-2 rounded-full bg-border" />
+              </div>
+              <span className="text-text-muted truncate">
+                {scrollAttempt.direction === 'down'
+                  ? t(ui['nav.scrollAgainNext'])
+                  : t(ui['nav.scrollAgainPrev'])}
+              </span>
+              <span className="font-bold text-accent-text shrink-0">
+                {t(ui[`nav.${scrollAttempt.targetId}`])}
+              </span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <Navbar activeSection={activeSection} onNavigate={navigateTo} />
 

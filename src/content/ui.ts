@@ -102,5 +102,7 @@ export const ui: Record<string, L> = {
   'cv.viewDetails': { en: 'View in portfolio', ar: 'عرض في الموقع' },
   'cv.visitSite': { en: 'External link', ar: 'رابط خارجي' },
   'hero.scrollDown': { en: 'Scroll to explore', ar: 'مرّر للاستكشاف' },
+  'nav.scrollAgainNext': { en: 'Scroll again for', ar: 'مرّر مرة أخرى للانتقال إلى' },
+  'nav.scrollAgainPrev': { en: 'Scroll again for', ar: 'مرّر مرة أخرى للرجوع إلى' },
 };
 
