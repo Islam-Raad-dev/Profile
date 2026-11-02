@@ -9,7 +9,7 @@ import { useLang } from '@/lib/i18n';
 import { useReducedMotion } from '@/lib/media';
 import { Button } from '@/components/ui/Button';
 import { SocialIcons } from '@/components/ui/SocialIcons';
-import { ArrowUpRight, Mail, FileText } from 'lucide-react';
+import { ArrowUpRight, Mail, FileText, ChevronDown } from 'lucide-react';
 import { openDigitalCv } from '@/lib/cvNavigation';
 import { HeroBackground } from './HeroBackground';
 import { HeroPhoto } from './HeroPhoto';
@@ -212,6 +212,34 @@ export function HeroSection() {
             >
               {t(ui['cta.contact'])}
             </Button>
+          </motion.div>
+
+          <motion.div
+            variants={itemVariants}
+            className="mt-6 sm:mt-8 flex flex-col items-center"
+          >
+            <button
+              type="button"
+              onClick={() => {
+                window.dispatchEvent(
+                  new CustomEvent('app-navigate-section', {
+                    detail: { sectionId: 'about' },
+                  })
+                );
+              }}
+              className="inline-flex flex-col items-center gap-1.5 text-text-muted/70 hover:text-accent-text transition-colors duration-300 group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-full py-1.5 px-3"
+              aria-label={t(ui['hero.scrollDown'])}
+            >
+              <span className="text-[11px] sm:text-xs font-mono tracking-wider opacity-75 group-hover:opacity-100 transition-opacity">
+                {t(ui['hero.scrollDown'])}
+              </span>
+              <motion.div
+                animate={reducedMotion ? undefined : { y: [0, 4, 0] }}
+                transition={reducedMotion ? undefined : { repeat: Infinity, duration: 1.6, ease: 'easeInOut' }}
+              >
+                <ChevronDown className="w-4 h-4 text-accent" />
+              </motion.div>
+            </button>
           </motion.div>
 
           <motion.div

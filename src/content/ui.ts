@@ -101,5 +101,6 @@ export const ui: Record<string, L> = {
   'cv.close': { en: 'Close report', ar: 'إغلاق التقرير' },
   'cv.viewDetails': { en: 'View in portfolio', ar: 'عرض في الموقع' },
   'cv.visitSite': { en: 'External link', ar: 'رابط خارجي' },
+  'hero.scrollDown': { en: 'Scroll to explore', ar: 'مرّر للاستكشاف' },
 };
 

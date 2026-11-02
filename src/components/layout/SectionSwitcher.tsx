@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import React, { useEffect, useState, useMemo, useCallback, useRef } from 'react';
 import { motion, AnimatePresence, type Variants } from 'motion/react';
 import type { SectionId } from '@/types';
 import { site } from '@/content/site';
@@ -85,9 +85,29 @@ export function SectionSwitcher() {
   const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
   const [pendingSection, setPendingSection] = useState<SectionId | null>(null);
 
+  const lastTransitionTimeRef = useRef<number>(0);
+  const accumulatedDeltaRef = useRef<number>(0);
+  const deltaResetTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const touchStartYRef = useRef<number | null>(null);
+  const touchStartXRef = useRef<number | null>(null);
+
+  const checkScrollBoundaries = useCallback(() => {
+    const scrollY = window.scrollY || document.documentElement.scrollTop;
+    const windowHeight = window.innerHeight;
+    const scrollHeight = document.documentElement.scrollHeight;
+    const isAtTop = scrollY <= 15;
+    const isAtBottom = windowHeight + scrollY >= scrollHeight - 30;
+    return { isAtTop, isAtBottom };
+  }, []);
+
   const navigateTo = useCallback(
     (targetId: SectionId) => {
       if (targetId === activeSection || isTransitioning) return;
+      const now = Date.now();
+      if (now - lastTransitionTimeRef.current < 850) return;
+      lastTransitionTimeRef.current = now;
+      accumulatedDeltaRef.current = 0;
+
       const currentIndex = enabledSections.findIndex((s) => s.id === activeSection);
       const nextIndex = enabledSections.findIndex((s) => s.id === targetId);
       setDirection(nextIndex > currentIndex ? 1 : -1);
@@ -108,6 +128,8 @@ export function SectionSwitcher() {
   const handleTransitionComplete = useCallback(() => {
     setIsTransitioning(false);
     setPendingSection(null);
+    lastTransitionTimeRef.current = Date.now();
+    accumulatedDeltaRef.current = 0;
   }, []);
 
   useEffect(() => {
@@ -141,6 +163,161 @@ export function SectionSwitcher() {
   }, [activeSection, enabledSections, initialSection, isTransitioning, navigateTo]);
 
   useEffect(() => {
+    const handleWheel = (e: WheelEvent) => {
+      if (isTransitioning || Date.now() - lastTransitionTimeRef.current < 850) {
+        return;
+      }
+
+      if (document.querySelector('dialog[open], [role="dialog"]')) {
+        return;
+      }
+
+      const active = document.activeElement;
+      if (
+        active &&
+        (active.tagName === 'INPUT' ||
+          active.tagName === 'TEXTAREA' ||
+          active.getAttribute('contenteditable') === 'true')
+      ) {
+        return;
+      }
+
+      if (deltaResetTimerRef.current) {
+        clearTimeout(deltaResetTimerRef.current);
+      }
+      deltaResetTimerRef.current = setTimeout(() => {
+        accumulatedDeltaRef.current = 0;
+      }, 250);
+
+      const { isAtTop, isAtBottom } = checkScrollBoundaries();
+      const currentIndex = enabledSections.findIndex((s) => s.id === activeSection);
+      if (currentIndex === -1) return;
+
+      if (e.deltaY > 0) {
+        if (!isAtBottom) {
+          accumulatedDeltaRef.current = 0;
+          return;
+        }
+
+        if (activeSection === 'achievements') {
+          const achElement = document.getElementById('achievements');
+          if (achElement && achElement.getAttribute('data-is-last-stage') === 'false') {
+            return;
+          }
+        }
+
+        if (currentIndex >= enabledSections.length - 1) return;
+
+        accumulatedDeltaRef.current += e.deltaY;
+        if (accumulatedDeltaRef.current >= 45) {
+          accumulatedDeltaRef.current = 0;
+          navigateTo(enabledSections[currentIndex + 1].id);
+        }
+      } else if (e.deltaY < 0) {
+        if (!isAtTop) {
+          accumulatedDeltaRef.current = 0;
+          return;
+        }
+
+        if (activeSection === 'achievements') {
+          const achElement = document.getElementById('achievements');
+          if (achElement && achElement.getAttribute('data-is-first-stage') === 'false') {
+            return;
+          }
+        }
+
+        if (currentIndex <= 0) return;
+
+        accumulatedDeltaRef.current += e.deltaY;
+        if (accumulatedDeltaRef.current <= -45) {
+          accumulatedDeltaRef.current = 0;
+          navigateTo(enabledSections[currentIndex - 1].id);
+        }
+      }
+    };
+
+    window.addEventListener('wheel', handleWheel, { passive: true });
+    return () => {
+      window.removeEventListener('wheel', handleWheel);
+      if (deltaResetTimerRef.current) {
+        clearTimeout(deltaResetTimerRef.current);
+      }
+    };
+  }, [activeSection, checkScrollBoundaries, enabledSections, isTransitioning, navigateTo]);
+
+  useEffect(() => {
+    const handleTouchStart = (e: TouchEvent) => {
+      if (e.touches.length === 1) {
+        touchStartYRef.current = e.touches[0].clientY;
+        touchStartXRef.current = e.touches[0].clientX;
+      }
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (touchStartYRef.current === null) return;
+      if (isTransitioning || Date.now() - lastTransitionTimeRef.current < 850) return;
+      if (document.querySelector('dialog[open], [role="dialog"]')) return;
+
+      const active = document.activeElement;
+      if (
+        active &&
+        (active.tagName === 'INPUT' ||
+          active.tagName === 'TEXTAREA' ||
+          active.getAttribute('contenteditable') === 'true')
+      ) {
+        return;
+      }
+
+      const touchEndY = e.changedTouches[0].clientY;
+      const touchEndX = e.changedTouches[0].clientX;
+      const deltaY = touchStartYRef.current - touchEndY;
+      const deltaX = (touchStartXRef.current || 0) - touchEndX;
+
+      touchStartYRef.current = null;
+      touchStartXRef.current = null;
+
+      if (Math.abs(deltaX) > Math.abs(deltaY)) return;
+      if (Math.abs(deltaY) < 50) return;
+
+      const { isAtTop, isAtBottom } = checkScrollBoundaries();
+      const currentIndex = enabledSections.findIndex((s) => s.id === activeSection);
+      if (currentIndex === -1) return;
+
+      if (deltaY > 0) {
+        if (!isAtBottom) return;
+        if (activeSection === 'achievements') {
+          const achElement = document.getElementById('achievements');
+          if (achElement && achElement.getAttribute('data-is-last-stage') === 'false') {
+            return;
+          }
+        }
+        if (currentIndex < enabledSections.length - 1) {
+          navigateTo(enabledSections[currentIndex + 1].id);
+        }
+      } else if (deltaY < 0) {
+        if (!isAtTop) return;
+        if (activeSection === 'achievements') {
+          const achElement = document.getElementById('achievements');
+          if (achElement && achElement.getAttribute('data-is-first-stage') === 'false') {
+            return;
+          }
+        }
+        if (currentIndex > 0) {
+          navigateTo(enabledSections[currentIndex - 1].id);
+        }
+      }
+    };
+
+    window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchend', handleTouchEnd, { passive: true });
+
+    return () => {
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [activeSection, checkScrollBoundaries, enabledSections, isTransitioning, navigateTo]);
+
+  useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const active = document.activeElement;
       if (
@@ -171,12 +348,40 @@ export function SectionSwitcher() {
         if (targetIndex >= 0 && targetIndex < enabledSections.length) {
           navigateTo(enabledSections[targetIndex].id);
         }
+      } else if (e.key === 'ArrowDown' || e.key === 'PageDown') {
+        const { isAtBottom } = checkScrollBoundaries();
+        if (activeSection === 'home' || isAtBottom) {
+          if (activeSection === 'achievements') {
+            const achElement = document.getElementById('achievements');
+            if (achElement && achElement.getAttribute('data-is-last-stage') === 'false') {
+              return;
+            }
+          }
+          if (currentIndex < enabledSections.length - 1) {
+            e.preventDefault();
+            navigateTo(enabledSections[currentIndex + 1].id);
+          }
+        }
+      } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+        const { isAtTop } = checkScrollBoundaries();
+        if (isAtTop) {
+          if (activeSection === 'achievements') {
+            const achElement = document.getElementById('achievements');
+            if (achElement && achElement.getAttribute('data-is-first-stage') === 'false') {
+              return;
+            }
+          }
+          if (currentIndex > 0) {
+            e.preventDefault();
+            navigateTo(enabledSections[currentIndex - 1].id);
+          }
+        }
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [activeSection, enabledSections, isRTL, navigateTo]);
+  }, [activeSection, checkScrollBoundaries, enabledSections, isRTL, navigateTo]);
 
   const ActiveComponent = SECTION_COMPONENTS[activeSection] || HeroSection;
   const targetSectionId = pendingSection || activeSection;

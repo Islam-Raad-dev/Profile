@@ -243,6 +243,8 @@ export function AchievementsSection() {
     <section
       ref={sectionRef}
       id="achievements"
+      data-is-first-stage={stageIndex === 0 ? 'true' : 'false'}
+      data-is-last-stage={stageIndex === STAGES.length - 1 ? 'true' : 'false'}
       aria-labelledby="achievements-heading"
       className="py-16 md:py-24 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8"
     >

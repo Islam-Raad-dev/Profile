@@ -99,6 +99,7 @@ Schedule
 - [x] Hero "Soft Elastic Neural Grid" canvas background (replaces the static SVG grid; static under reduced motion)
 - [x] Achievements revamp: interactive category filter, 5-star ratings, timeline badges, learnings, portfolio project links, 14-course Programming Advices roadmap grouping, and Volunteering section
 - [x] Signature TemRevil interactive close button effect (red hover fill, 90deg spin, scale, tactile press, ambient glow) applied across all modal dialogs (Achievements, Projects, Digital CV)
+- [x] Scroll navigation: scroll down from Home to reveal page after page through the entire site with directional PageTransition curtain effect (wheel, trackpad, touch swipe, and ArrowDown/ArrowUp keys)
 
 ---
 
