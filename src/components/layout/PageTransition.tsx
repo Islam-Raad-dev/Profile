@@ -47,7 +47,7 @@ export function PageTransition({
 
       const completeTimer = setTimeout(() => {
         onTransitionComplete();
-      }, 920);
+      }, 620);
 
       return () => {
         clearTimeout(coveredTimer);

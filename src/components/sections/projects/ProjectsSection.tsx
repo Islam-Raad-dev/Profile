@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useMemo, useCallback, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import type { Project } from '@/types';
 import { projects } from '@/content/projects';
@@ -11,7 +11,6 @@ import { SectionHeader } from '@/components/ui/SectionHeader';
 import { ProjectCard } from './ProjectCard';
 import { Reveal } from '@/components/ui/Reveal';
 import { Sparkles } from 'lucide-react';
-import { scheduleIdle, preloadProjectModal } from '@/lib/preload';
 
 const ProjectModal = dynamic(
   () => import('./ProjectModal').then((mod) => mod.ProjectModal),
@@ -26,13 +25,11 @@ export function ProjectsSection({ customProjects }: ProjectsSectionProps) {
   const { t } = useLang();
   const list = customProjects || projects;
 
-  const sortedProjects = useMemo(() => {
-    return [...list].sort((a, b) => {
-      if (a.featured && !b.featured) return -1;
-      if (!a.featured && b.featured) return 1;
-      return 0;
-    });
-  }, [list]);
+  const sortedProjects = [...list].sort((a, b) => {
+    if (a.featured && !b.featured) return -1;
+    if (!a.featured && b.featured) return 1;
+    return 0;
+  });
 
   const [selectedProject, setSelectedProject] = useState<Project | null>(() => {
     if (typeof window !== 'undefined') {
@@ -52,26 +49,18 @@ export function ProjectsSection({ customProjects }: ProjectsSectionProps) {
   });
   const activeTriggerRef = useRef<HTMLElement | null>(null);
 
-  const handleOpenModal = useCallback(
-    (
-      project: Project,
-      triggerRef: React.RefObject<HTMLButtonElement | null>
-    ) => {
-      activeTriggerRef.current = triggerRef.current;
-      setSelectedProject(project);
-      setIsModalOpen(true);
-    },
-    []
-  );
+  const handleOpenModal = (
+    project: Project,
+    triggerRef: React.RefObject<HTMLButtonElement | null>
+  ) => {
+    activeTriggerRef.current = triggerRef.current;
+    setSelectedProject(project);
+    setIsModalOpen(true);
+  };
 
-  const handleCloseModal = useCallback(() => {
+  const handleCloseModal = () => {
     setIsModalOpen(false);
-  }, []);
-
-  useEffect(() => {
-    const cancel = scheduleIdle(preloadProjectModal, 3000);
-    return cancel;
-  }, []);
+  };
 
   return (
     <section
@@ -86,10 +75,7 @@ export function ProjectsSection({ customProjects }: ProjectsSectionProps) {
         />
       </Reveal>
 
-      <div
-        className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8"
-        onMouseEnter={preloadProjectModal}
-      >
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
         {sortedProjects.map((project, index) => (
           <Reveal key={project.id} delay={index * 0.1}>
             <ProjectCard project={project} onSelect={handleOpenModal} />

@@ -8,7 +8,7 @@ interface MilestoneCoverArtProps {
   className?: string;
 }
 
-function MilestoneCoverArtComponent({
+export function MilestoneCoverArt({
   id,
   size = 'hero',
   className = '',
@@ -304,5 +304,3 @@ function MilestoneCoverArtComponent({
     </div>
   );
 }
-
-export const MilestoneCoverArt = React.memo(MilestoneCoverArtComponent);

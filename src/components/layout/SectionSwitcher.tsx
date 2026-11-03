@@ -90,40 +90,18 @@ export function SectionSwitcher() {
   } | null>(null);
 
   const lastTransitionTimeRef = useRef<number>(0);
+  const queuedSectionRef = useRef<SectionId | null>(null);
   const accumulatedDeltaRef = useRef<number>(0);
   const deltaResetTimerRef = useRef<NodeJS.Timeout | null>(null);
   const scrollAttemptTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastAttemptTimeRef = useRef<number>(0);
   const touchStartYRef = useRef<number | null>(null);
   const touchStartXRef = useRef<number | null>(null);
-  const wheelRafIdRef = useRef<number | null>(null);
-  const cachedDimensionsRef = useRef<{ height: number; scrollHeight: number }>({
-    height: 0,
-    scrollHeight: 0,
-  });
-
-  const updateCachedDimensions = useCallback(() => {
-    if (typeof window === 'undefined') return;
-    cachedDimensionsRef.current = {
-      height: window.innerHeight,
-      scrollHeight: document.documentElement.scrollHeight,
-    };
-  }, []);
-
-  useEffect(() => {
-    updateCachedDimensions();
-    window.addEventListener('resize', updateCachedDimensions, { passive: true });
-    return () => window.removeEventListener('resize', updateCachedDimensions);
-  }, [updateCachedDimensions]);
 
   const checkScrollBoundaries = useCallback(() => {
     const scrollY = window.scrollY || document.documentElement.scrollTop;
-    let { height: windowHeight, scrollHeight } = cachedDimensionsRef.current;
-    if (!windowHeight || !scrollHeight) {
-      windowHeight = window.innerHeight;
-      scrollHeight = document.documentElement.scrollHeight;
-      cachedDimensionsRef.current = { height: windowHeight, scrollHeight };
-    }
+    const windowHeight = window.innerHeight;
+    const scrollHeight = document.documentElement.scrollHeight;
     const isAtTop = scrollY <= 15;
     const isAtBottom = windowHeight + scrollY >= scrollHeight - 30;
     return { isAtTop, isAtBottom };
@@ -131,10 +109,14 @@ export function SectionSwitcher() {
 
   const navigateTo = useCallback(
     (targetId: SectionId) => {
-      if (targetId === activeSection || isTransitioning) return;
-      const now = Date.now();
-      if (now - lastTransitionTimeRef.current < 850) return;
-      lastTransitionTimeRef.current = now;
+      const currentEffective = pendingSection || activeSection;
+      if (targetId === currentEffective) return;
+
+      if (isTransitioning) {
+        queuedSectionRef.current = targetId;
+        return;
+      }
+
       accumulatedDeltaRef.current = 0;
       setScrollAttempt(null);
       if (scrollAttemptTimeoutRef.current) {
@@ -147,7 +129,7 @@ export function SectionSwitcher() {
       setPendingSection(targetId);
       setIsTransitioning(true);
     },
-    [activeSection, enabledSections, isTransitioning]
+    [activeSection, enabledSections, isTransitioning, pendingSection]
   );
 
   const registerScrollAttempt = useCallback(
@@ -198,7 +180,15 @@ export function SectionSwitcher() {
     setPendingSection(null);
     lastTransitionTimeRef.current = Date.now();
     accumulatedDeltaRef.current = 0;
-  }, []);
+
+    if (queuedSectionRef.current) {
+      const queued = queuedSectionRef.current;
+      queuedSectionRef.current = null;
+      setTimeout(() => {
+        navigateTo(queued);
+      }, 20);
+    }
+  }, [navigateTo]);
 
   useEffect(() => {
     const handleHashChange = () => {
@@ -257,68 +247,56 @@ export function SectionSwitcher() {
         accumulatedDeltaRef.current = 0;
       }, 250);
 
-      accumulatedDeltaRef.current += e.deltaY;
+      const { isAtTop, isAtBottom } = checkScrollBoundaries();
+      const currentIndex = enabledSections.findIndex((s) => s.id === activeSection);
+      if (currentIndex === -1) return;
 
-      if (wheelRafIdRef.current !== null) {
-        return;
-      }
+      if (e.deltaY > 0) {
+        if (!isAtBottom) {
+          accumulatedDeltaRef.current = 0;
+          return;
+        }
 
-      wheelRafIdRef.current = requestAnimationFrame(() => {
-        wheelRafIdRef.current = null;
-        const { isAtTop, isAtBottom } = checkScrollBoundaries();
-        const currentIndex = enabledSections.findIndex((s) => s.id === activeSection);
-        if (currentIndex === -1) return;
-
-        const currentAccum = accumulatedDeltaRef.current;
-        if (currentAccum > 0) {
-          if (!isAtBottom) {
-            accumulatedDeltaRef.current = 0;
+        if (activeSection === 'achievements') {
+          const achElement = document.getElementById('achievements');
+          if (achElement && achElement.getAttribute('data-is-last-stage') === 'false') {
             return;
-          }
-
-          if (activeSection === 'achievements') {
-            const achElement = document.getElementById('achievements');
-            if (achElement && achElement.getAttribute('data-is-last-stage') === 'false') {
-              return;
-            }
-          }
-
-          if (currentIndex >= enabledSections.length - 1) return;
-
-          if (currentAccum >= 45) {
-            accumulatedDeltaRef.current = 0;
-            registerScrollAttempt('down', enabledSections[currentIndex + 1].id);
-          }
-        } else if (currentAccum < 0) {
-          if (!isAtTop) {
-            accumulatedDeltaRef.current = 0;
-            return;
-          }
-
-          if (activeSection === 'achievements') {
-            const achElement = document.getElementById('achievements');
-            if (achElement && achElement.getAttribute('data-is-first-stage') === 'false') {
-              return;
-            }
-          }
-
-          if (currentIndex <= 0) return;
-
-          if (currentAccum <= -45) {
-            accumulatedDeltaRef.current = 0;
-            registerScrollAttempt('up', enabledSections[currentIndex - 1].id);
           }
         }
-      });
+
+        if (currentIndex >= enabledSections.length - 1) return;
+
+        accumulatedDeltaRef.current += e.deltaY;
+        if (accumulatedDeltaRef.current >= 45) {
+          accumulatedDeltaRef.current = 0;
+          registerScrollAttempt('down', enabledSections[currentIndex + 1].id);
+        }
+      } else if (e.deltaY < 0) {
+        if (!isAtTop) {
+          accumulatedDeltaRef.current = 0;
+          return;
+        }
+
+        if (activeSection === 'achievements') {
+          const achElement = document.getElementById('achievements');
+          if (achElement && achElement.getAttribute('data-is-first-stage') === 'false') {
+            return;
+          }
+        }
+
+        if (currentIndex <= 0) return;
+
+        accumulatedDeltaRef.current += e.deltaY;
+        if (accumulatedDeltaRef.current <= -45) {
+          accumulatedDeltaRef.current = 0;
+          registerScrollAttempt('up', enabledSections[currentIndex - 1].id);
+        }
+      }
     };
 
     window.addEventListener('wheel', handleWheel, { passive: true });
     return () => {
       window.removeEventListener('wheel', handleWheel);
-      if (wheelRafIdRef.current !== null) {
-        cancelAnimationFrame(wheelRafIdRef.current);
-        wheelRafIdRef.current = null;
-      }
       if (deltaResetTimerRef.current) {
         clearTimeout(deltaResetTimerRef.current);
       }
@@ -536,7 +514,7 @@ export function SectionSwitcher() {
         )}
       </AnimatePresence>
 
-      <Navbar activeSection={activeSection} onNavigate={navigateTo} />
+      <Navbar activeSection={pendingSection || activeSection} onNavigate={navigateTo} />
 
       <PageTransition
         isTransitioning={isTransitioning}

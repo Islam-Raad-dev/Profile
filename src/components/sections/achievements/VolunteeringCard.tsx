@@ -13,7 +13,7 @@ interface VolunteeringCardProps {
   onSelect?: (item: VolunteeringItem, triggerRef: React.RefObject<HTMLButtonElement | null>) => void;
 }
 
-function VolunteeringCardComponent({ item, onSelect }: VolunteeringCardProps) {
+export function VolunteeringCard({ item, onSelect }: VolunteeringCardProps) {
   const { t } = useLang();
   const cardRef = useRef<HTMLButtonElement>(null);
 
@@ -82,5 +82,3 @@ function VolunteeringCardComponent({ item, onSelect }: VolunteeringCardProps) {
     </button>
   );
 }
-
-export const VolunteeringCard = React.memo(VolunteeringCardComponent);

@@ -11,7 +11,6 @@ import { Button } from '@/components/ui/Button';
 import { SocialIcons } from '@/components/ui/SocialIcons';
 import { ArrowUpRight, Mail, FileText, ChevronDown } from 'lucide-react';
 import { openDigitalCv } from '@/lib/cvNavigation';
-import { preloadDigitalCvModal } from '@/lib/preload';
 import { HeroBackground } from './HeroBackground';
 import { HeroPhoto } from './HeroPhoto';
 
@@ -199,8 +198,6 @@ export function HeroSection() {
             <Button
               type="button"
               onClick={openDigitalCv}
-              onMouseEnter={preloadDigitalCvModal}
-              onFocus={preloadDigitalCvModal}
               variant="secondary"
               className="w-full sm:w-auto px-7 py-3 rounded-full border border-border/80 bg-card/40 hover:bg-card/80 cursor-pointer"
               icon={<FileText className="w-4 h-4" />}

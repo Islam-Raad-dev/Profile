@@ -189,27 +189,10 @@ export function NeuralGrid() {
       render(0, 0);
     };
 
-    let cachedRectLeft = 0;
-    let cachedRectTop = 0;
-    let scrollRafId = 0;
-
-    const updateCachedRect = () => {
-      const rect = canvas.getBoundingClientRect();
-      cachedRectLeft = rect.left;
-      cachedRectTop = rect.top;
-    };
-
-    const onScrollPassive = () => {
-      if (scrollRafId) return;
-      scrollRafId = requestAnimationFrame(() => {
-        scrollRafId = 0;
-        updateCachedRect();
-      });
-    };
-
     const step = (time: number) => {
-      const pointerX = pointer.clientX - cachedRectLeft;
-      const pointerY = pointer.clientY - cachedRectTop;
+      const rect = canvas.getBoundingClientRect();
+      const pointerX = pointer.clientX - rect.left;
+      const pointerY = pointer.clientY - rect.top;
       pointer.influence += ((pointer.active ? 1 : 0) - pointer.influence) * POINTER_FADE;
       const influence = pointer.influence > 0.001 ? pointer.influence : 0;
 
@@ -242,29 +225,18 @@ export function NeuralGrid() {
       render(pointerX, pointerY);
     };
 
-    let lastTime = 0;
-    let runningTime = 0;
-
-    const frame = (now: number) => {
-      if (!lastTime) {
-        lastTime = now;
-      }
-      const delta = Math.min(now - lastTime, 64);
-      lastTime = now;
-      runningTime += delta;
-      step(runningTime);
+    const frame = (time: number) => {
+      step(time);
       frameId = requestAnimationFrame(frame);
     };
 
     const stop = () => {
       if (frameId) cancelAnimationFrame(frameId);
       frameId = 0;
-      lastTime = 0;
     };
 
     const start = () => {
-      if (frameId || !isRendered || document.hidden || reducedMotionMedia.matches) return;
-      lastTime = 0;
+      if (frameId || !isRendered || reducedMotionMedia.matches) return;
       frameId = requestAnimationFrame(frame);
     };
 
@@ -280,7 +252,6 @@ export function NeuralGrid() {
 
     const rebuild = () => {
       buildGrid();
-      updateCachedRect();
       if (reducedMotionMedia.matches) renderStatic();
     };
 
@@ -298,18 +269,14 @@ export function NeuralGrid() {
       }
     };
 
-    const handleVisibilityChange = () => {
-      if (document.hidden) {
-        stop();
-      } else if (isRendered) {
-        updateCachedRect();
-        start();
-      }
+    const handleRenderStateChange = (event: Event) => {
+      isRendered = !(event as Event & { skipped?: boolean }).skipped;
+      if (isRendered) start();
+      else stop();
     };
 
     readColor();
     buildGrid();
-    updateCachedRect();
     if (reducedMotionMedia.matches) renderStatic();
     else start();
 
@@ -325,38 +292,36 @@ export function NeuralGrid() {
       attributeFilter: ['class', 'data-theme'],
     });
 
-    const visibilityObserver = new IntersectionObserver(
-      ([entry]) => {
-        isRendered = entry.isIntersecting;
-        if (isRendered) {
-          updateCachedRect();
-          start();
-        } else {
-          stop();
-        }
-      },
-      { rootMargin: '200px' }
-    );
-    visibilityObserver.observe(wrapper);
+    const supportsContentVisibility = 'contentVisibility' in document.documentElement.style;
+    let visibilityObserver: IntersectionObserver | undefined;
+    if (supportsContentVisibility) {
+      wrapper.addEventListener('contentvisibilityautostatechange', handleRenderStateChange);
+    } else {
+      visibilityObserver = new IntersectionObserver(
+        ([entry]) => {
+          isRendered = entry.isIntersecting;
+          if (isRendered) start();
+          else stop();
+        },
+        { rootMargin: '200px' }
+      );
+      visibilityObserver.observe(wrapper);
+    }
 
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
-    window.addEventListener('scroll', onScrollPassive, { passive: true });
     window.addEventListener('blur', handlePointerExit);
-    document.addEventListener('visibilitychange', handleVisibilityChange);
     document.documentElement.addEventListener('mouseleave', handlePointerExit);
     reducedMotionMedia.addEventListener('change', handleMotionPreference);
 
     return () => {
       stop();
-      if (scrollRafId) cancelAnimationFrame(scrollRafId);
       clearTimeout(resizeTimer);
       resizeObserver.disconnect();
       themeObserver.disconnect();
-      visibilityObserver.disconnect();
+      visibilityObserver?.disconnect();
+      wrapper.removeEventListener('contentvisibilityautostatechange', handleRenderStateChange);
       window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('scroll', onScrollPassive);
       window.removeEventListener('blur', handlePointerExit);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
       document.documentElement.removeEventListener('mouseleave', handlePointerExit);
       reducedMotionMedia.removeEventListener('change', handleMotionPreference);
     };
@@ -366,7 +331,7 @@ export function NeuralGrid() {
     <div
       ref={wrapperRef}
       aria-hidden="true"
-      className="absolute inset-0 pointer-events-none"
+      className="absolute inset-0 pointer-events-none [content-visibility:auto]"
     >
       <canvas ref={canvasRef} className="block w-full h-full pointer-events-none" />
     </div>
