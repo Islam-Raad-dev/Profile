@@ -90,6 +90,7 @@ export function SectionSwitcher() {
   } | null>(null);
 
   const lastTransitionTimeRef = useRef<number>(0);
+  const queuedSectionRef = useRef<SectionId | null>(null);
   const accumulatedDeltaRef = useRef<number>(0);
   const deltaResetTimerRef = useRef<NodeJS.Timeout | null>(null);
   const scrollAttemptTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -108,10 +109,14 @@ export function SectionSwitcher() {
 
   const navigateTo = useCallback(
     (targetId: SectionId) => {
-      if (targetId === activeSection || isTransitioning) return;
-      const now = Date.now();
-      if (now - lastTransitionTimeRef.current < 850) return;
-      lastTransitionTimeRef.current = now;
+      const currentEffective = pendingSection || activeSection;
+      if (targetId === currentEffective) return;
+
+      if (isTransitioning) {
+        queuedSectionRef.current = targetId;
+        return;
+      }
+
       accumulatedDeltaRef.current = 0;
       setScrollAttempt(null);
       if (scrollAttemptTimeoutRef.current) {
@@ -124,7 +129,7 @@ export function SectionSwitcher() {
       setPendingSection(targetId);
       setIsTransitioning(true);
     },
-    [activeSection, enabledSections, isTransitioning]
+    [activeSection, enabledSections, isTransitioning, pendingSection]
   );
 
   const registerScrollAttempt = useCallback(
@@ -175,7 +180,15 @@ export function SectionSwitcher() {
     setPendingSection(null);
     lastTransitionTimeRef.current = Date.now();
     accumulatedDeltaRef.current = 0;
-  }, []);
+
+    if (queuedSectionRef.current) {
+      const queued = queuedSectionRef.current;
+      queuedSectionRef.current = null;
+      setTimeout(() => {
+        navigateTo(queued);
+      }, 20);
+    }
+  }, [navigateTo]);
 
   useEffect(() => {
     const handleHashChange = () => {
@@ -501,7 +514,7 @@ export function SectionSwitcher() {
         )}
       </AnimatePresence>
 
-      <Navbar activeSection={activeSection} onNavigate={navigateTo} />
+      <Navbar activeSection={pendingSection || activeSection} onNavigate={navigateTo} />
 
       <PageTransition
         isTransitioning={isTransitioning}

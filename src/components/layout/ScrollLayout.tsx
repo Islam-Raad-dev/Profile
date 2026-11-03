@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import type { SectionId } from '@/types';
 import { site } from '@/content/site';
 import { ui } from '@/content/ui';
@@ -34,17 +34,25 @@ export function ScrollLayout() {
   const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
   const [pendingSection, setPendingSection] = useState<SectionId | null>(null);
   const [direction, setDirection] = useState<number>(1);
+  const queuedSectionRef = useRef<SectionId | null>(null);
 
   const handleNavigate = useCallback(
     (sectionId: SectionId) => {
-      if (sectionId === activeSection || isTransitioning) return;
+      const currentTarget = pendingSection || activeSection;
+      if (sectionId === currentTarget) return;
+
+      if (isTransitioning) {
+        queuedSectionRef.current = sectionId;
+        return;
+      }
+
       const currentIndex = enabledSections.findIndex((s) => s.id === activeSection);
       const nextIndex = enabledSections.findIndex((s) => s.id === sectionId);
       setDirection(nextIndex > currentIndex ? 1 : -1);
       setPendingSection(sectionId);
       setIsTransitioning(true);
     },
-    [activeSection, enabledSections, isTransitioning]
+    [activeSection, enabledSections, isTransitioning, pendingSection]
   );
 
   useEffect(() => {
@@ -104,10 +112,18 @@ export function ScrollLayout() {
     }
   };
 
-  const handleTransitionComplete = () => {
+  const handleTransitionComplete = useCallback(() => {
     setIsTransitioning(false);
     setPendingSection(null);
-  };
+
+    if (queuedSectionRef.current) {
+      const queued = queuedSectionRef.current;
+      queuedSectionRef.current = null;
+      setTimeout(() => {
+        handleNavigate(queued);
+      }, 20);
+    }
+  }, [handleNavigate]);
 
   const targetSectionId = pendingSection || activeSection;
   const targetSectionName = t(ui[`nav.${targetSectionId}`]);
@@ -129,7 +145,7 @@ export function ScrollLayout() {
         })}
       </main>
 
-      <Navbar activeSection={activeSection} onNavigate={handleNavigate} />
+      <Navbar activeSection={pendingSection || activeSection} onNavigate={handleNavigate} />
 
       <PageTransition
         isTransitioning={isTransitioning}

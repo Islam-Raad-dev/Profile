@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import type { SectionId } from '@/types';
 import { site } from '@/content/site';
@@ -40,6 +40,7 @@ export function Navbar({ activeSection, onNavigate }: NavbarProps) {
   const { theme, toggleTheme } = useTheme();
   const reducedMotion = useReducedMotion();
   const [hoveredKey, setHoveredKey] = useState<string | null>(null);
+  const isTouchRef = useRef(false);
 
   const enabledSections = site.sections.filter((s) => s.enabled);
   const navSections = enabledSections.filter((s) => s.id !== 'contact');
@@ -65,11 +66,42 @@ export function Navbar({ activeSection, onNavigate }: NavbarProps) {
     };
   };
 
-  const handleNavClick = (id: SectionId, e: React.MouseEvent<HTMLButtonElement>) => {
-    e.currentTarget.blur();
-    setHoveredKey(null);
-    onNavigate(id);
-  };
+  useEffect(() => {
+    const onTouchStart = () => {
+      isTouchRef.current = true;
+    };
+    const onMouseMove = () => {
+      isTouchRef.current = false;
+    };
+    window.addEventListener('touchstart', onTouchStart, { passive: true });
+    window.addEventListener('mousemove', onMouseMove, { passive: true });
+    return () => {
+      window.removeEventListener('touchstart', onTouchStart);
+      window.removeEventListener('mousemove', onMouseMove);
+    };
+  }, []);
+
+  const handleMouseEnter = useCallback((key: string) => {
+    if (isTouchRef.current) return;
+    if (typeof window !== 'undefined' && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      setHoveredKey(key);
+    }
+  }, []);
+
+  const handleFocus = useCallback((key: string) => {
+    if (isTouchRef.current) return;
+    if (typeof window !== 'undefined' && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      setHoveredKey(key);
+    }
+  }, []);
+
+  const handleNavClick = useCallback(
+    (id: SectionId) => {
+      setHoveredKey(null);
+      onNavigate(id);
+    },
+    [onNavigate]
+  );
 
   const renderTooltip = (key: string) => {
     const isVisible = hoveredKey === key;
@@ -106,7 +138,7 @@ export function Navbar({ activeSection, onNavigate }: NavbarProps) {
     >
       <div
         onMouseLeave={() => setHoveredKey(null)}
-        className="relative flex items-center gap-1 p-1.5 sm:p-2 rounded-2xl bg-card/90 backdrop-blur-glass border border-border shadow-card"
+        className="relative flex items-center gap-1 p-1.5 sm:p-2 rounded-2xl bg-card/90 backdrop-blur-glass border border-border shadow-card touch-manipulation"
       >
         {navSections.map((sec) => {
           const id = sec.id;
@@ -118,9 +150,9 @@ export function Navbar({ activeSection, onNavigate }: NavbarProps) {
             <button
               key={id}
               type="button"
-              onClick={(e) => handleNavClick(id, e)}
-              onMouseEnter={() => setHoveredKey(id)}
-              onFocus={() => setHoveredKey(id)}
+              onClick={() => handleNavClick(id)}
+              onMouseEnter={() => handleMouseEnter(id)}
+              onFocus={() => handleFocus(id)}
               onBlur={() => setHoveredKey(null)}
               aria-label={label}
               aria-current={isActive ? 'page' : undefined}
@@ -154,9 +186,9 @@ export function Navbar({ activeSection, onNavigate }: NavbarProps) {
         {hasContact && (
           <button
             type="button"
-            onClick={(e) => handleNavClick('contact', e)}
-            onMouseEnter={() => setHoveredKey('contact')}
-            onFocus={() => setHoveredKey('contact')}
+            onClick={() => handleNavClick('contact')}
+            onMouseEnter={() => handleMouseEnter('contact')}
+            onFocus={() => handleFocus('contact')}
             onBlur={() => setHoveredKey(null)}
             aria-label={t(ui['nav.contact'])}
             aria-current={activeSection === 'contact' ? 'page' : undefined}
@@ -187,8 +219,8 @@ export function Navbar({ activeSection, onNavigate }: NavbarProps) {
         <button
           type="button"
           onClick={toggleTheme}
-          onMouseEnter={() => setHoveredKey('theme')}
-          onFocus={() => setHoveredKey('theme')}
+          onMouseEnter={() => handleMouseEnter('theme')}
+          onFocus={() => handleFocus('theme')}
           onBlur={() => setHoveredKey(null)}
           aria-label={t(ui['toggle.theme'])}
           className="relative flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl text-text-muted hover:text-text hover:bg-surface/50 transition-colors cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
@@ -205,8 +237,8 @@ export function Navbar({ activeSection, onNavigate }: NavbarProps) {
         <button
           type="button"
           onClick={toggleLang}
-          onMouseEnter={() => setHoveredKey('lang')}
-          onFocus={() => setHoveredKey('lang')}
+          onMouseEnter={() => handleMouseEnter('lang')}
+          onFocus={() => handleFocus('lang')}
           onBlur={() => setHoveredKey(null)}
           aria-label={t(ui['toggle.lang'])}
           className="relative flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl text-text-muted hover:text-text hover:bg-surface/50 transition-colors cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
