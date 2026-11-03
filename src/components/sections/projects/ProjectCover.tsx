@@ -12,7 +12,7 @@ interface ProjectCoverProps {
   aspectRatio?: string;
 }
 
-export function ProjectCover({
+function ProjectCoverComponent({
   project,
   className = '',
   aspectRatio = 'aspect-[16/10]',
@@ -31,6 +31,8 @@ export function ProjectCover({
           src={project.images[0]}
           alt={title}
           fill
+          loading="lazy"
+          decoding="async"
           sizes="(min-width: 1024px) 500px, 100vw"
           className="object-cover transition-transform duration-300 group-hover:scale-105"
           onError={() => setImageError(true)}
@@ -58,3 +60,6 @@ export function ProjectCover({
     </div>
   );
 }
+
+export const ProjectCover = React.memo(ProjectCoverComponent);
+

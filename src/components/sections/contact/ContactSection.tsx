@@ -17,6 +17,7 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import { openDigitalCv } from '@/lib/cvNavigation';
+import { preloadDigitalCvModal } from '@/lib/preload';
 
 function WhatsAppIcon({ className }: { className?: string }) {
   return (
@@ -197,6 +198,8 @@ export function ContactSection() {
               }
               target={method.external ? '_blank' : undefined}
               rel={method.external ? 'noopener noreferrer' : undefined}
+              onMouseEnter={method.id === 'cv' ? preloadDigitalCvModal : undefined}
+              onFocus={method.id === 'cv' ? preloadDigitalCvModal : undefined}
               className="group flex items-center justify-between p-4 rounded-2xl bg-card border border-border backdrop-blur-glass shadow-card hover:border-accent hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent cursor-pointer"
             >
               <div className="flex items-center gap-3.5 min-w-0">

@@ -15,6 +15,7 @@ import { AchievementCard } from './AchievementCard';
 import { VolunteeringCard } from './VolunteeringCard';
 import { StageTransitionBridge } from './StageTransitionBridge';
 import { Trophy, GraduationCap, HeartHandshake } from 'lucide-react';
+import { scheduleIdle, preloadAchievementModal } from '@/lib/preload';
 
 const AchievementModal = dynamic(
   () => import('./AchievementModal').then((mod) => mod.AchievementModal),
@@ -164,6 +165,11 @@ export function AchievementsSection() {
     };
   }, [registerScrollDownAttempt, stageIndex]);
 
+  useEffect(() => {
+    const cancel = scheduleIdle(preloadAchievementModal, 3500);
+    return cancel;
+  }, []);
+
   const handleOpenModal = useCallback(
     (
       achievement: Achievement,
@@ -254,6 +260,7 @@ export function AchievementsSection() {
     <section
       ref={sectionRef}
       id="achievements"
+      onMouseEnter={preloadAchievementModal}
       data-is-first-stage={stageIndex === 0 ? 'true' : 'false'}
       data-is-last-stage={stageIndex === STAGES.length - 1 ? 'true' : 'false'}
       aria-labelledby="achievements-heading"

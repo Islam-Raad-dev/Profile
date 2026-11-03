@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useMemo, useCallback } from 'react';
+import React, { useState, useRef, useMemo, useCallback, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import type { Project } from '@/types';
 import { projects } from '@/content/projects';
@@ -11,6 +11,7 @@ import { SectionHeader } from '@/components/ui/SectionHeader';
 import { ProjectCard } from './ProjectCard';
 import { Reveal } from '@/components/ui/Reveal';
 import { Sparkles } from 'lucide-react';
+import { scheduleIdle, preloadProjectModal } from '@/lib/preload';
 
 const ProjectModal = dynamic(
   () => import('./ProjectModal').then((mod) => mod.ProjectModal),
@@ -67,6 +68,11 @@ export function ProjectsSection({ customProjects }: ProjectsSectionProps) {
     setIsModalOpen(false);
   }, []);
 
+  useEffect(() => {
+    const cancel = scheduleIdle(preloadProjectModal, 3000);
+    return cancel;
+  }, []);
+
   return (
     <section
       id="projects"
@@ -80,7 +86,10 @@ export function ProjectsSection({ customProjects }: ProjectsSectionProps) {
         />
       </Reveal>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+      <div
+        className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8"
+        onMouseEnter={preloadProjectModal}
+      >
         {sortedProjects.map((project, index) => (
           <Reveal key={project.id} delay={index * 0.1}>
             <ProjectCard project={project} onSelect={handleOpenModal} />

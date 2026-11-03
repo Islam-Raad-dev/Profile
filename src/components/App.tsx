@@ -7,6 +7,7 @@ import { useSectionSwitcherLayout } from '@/lib/media';
 import { useLang } from '@/lib/i18n';
 import { ui } from '@/content/ui';
 import { openDigitalCv } from '@/lib/cvNavigation';
+import { scheduleIdle, preloadDigitalCvModal } from '@/lib/preload';
 
 const SectionSwitcher = dynamic(
   () => import('./layout/SectionSwitcher').then((mod) => mod.SectionSwitcher),
@@ -31,6 +32,8 @@ export function App() {
         openDigitalCv();
       }
     }
+    const cancel = scheduleIdle(preloadDigitalCvModal, 2000);
+    return cancel;
   }, []);
 
   return (
