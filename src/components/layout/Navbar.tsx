@@ -30,6 +30,10 @@ const ICON_MAP: Record<SectionId, LucideIcon> = {
   contact: Mail,
 };
 
+const ENABLED_SECTIONS = site.sections.filter((s) => s.enabled);
+const NAV_SECTIONS = ENABLED_SECTIONS.filter((s) => s.id !== 'contact');
+const HAS_CONTACT = ENABLED_SECTIONS.some((s) => s.id === 'contact');
+
 interface NavbarProps {
   activeSection: SectionId;
   onNavigate: (sectionId: SectionId) => void;
@@ -41,9 +45,8 @@ export function Navbar({ activeSection, onNavigate }: NavbarProps) {
   const reducedMotion = useReducedMotion();
   const [hoveredKey, setHoveredKey] = useState<string | null>(null);
 
-  const enabledSections = site.sections.filter((s) => s.enabled);
-  const navSections = enabledSections.filter((s) => s.id !== 'contact');
-  const hasContact = enabledSections.some((s) => s.id === 'contact');
+  const navSections = NAV_SECTIONS;
+  const hasContact = HAS_CONTACT;
 
   const getTooltipData = (key: string): { icon: LucideIcon; label: string } => {
     if (key === 'theme') {

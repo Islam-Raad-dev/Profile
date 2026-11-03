@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import { motion, AnimatePresence, type Variants } from 'motion/react';
 import type { Achievement, VolunteeringItem, MilestoneStage } from '@/types';
@@ -22,6 +22,8 @@ const AchievementModal = dynamic(
 );
 
 const STAGES: MilestoneStage[] = ['achievements', 'programs_certs', 'volunteering'];
+const ACHIEVEMENT_LIST = achievements.filter((a) => a.category === 'achievement');
+const PROGRAM_LIST = achievements.filter((a) => a.category === 'program_cert');
 
 export function AchievementsSection() {
   const { lang, t } = useLang();
@@ -41,8 +43,8 @@ export function AchievementsSection() {
   const touchStartYRef = useRef<number>(0);
   const sectionRef = useRef<HTMLElement | null>(null);
 
-  const achievementList = achievements.filter((a) => a.category === 'achievement');
-  const programList = achievements.filter((a) => a.category === 'program_cert');
+  const achievementList = ACHIEVEMENT_LIST;
+  const programList = PROGRAM_LIST;
 
   const stageIndex = STAGES.indexOf(activeStage);
 
@@ -162,50 +164,59 @@ export function AchievementsSection() {
     };
   }, [registerScrollDownAttempt, stageIndex]);
 
-  const handleOpenModal = (
-    achievement: Achievement,
-    triggerRef: React.RefObject<HTMLButtonElement | null>
-  ) => {
-    activeTriggerRef.current = triggerRef.current;
-    setSelectedVolunteering(null);
-    setSelectedAchievement(achievement);
-    setIsModalOpen(true);
-  };
+  const handleOpenModal = useCallback(
+    (
+      achievement: Achievement,
+      triggerRef: React.RefObject<HTMLButtonElement | null>
+    ) => {
+      activeTriggerRef.current = triggerRef.current;
+      setSelectedVolunteering(null);
+      setSelectedAchievement(achievement);
+      setIsModalOpen(true);
+    },
+    []
+  );
 
-  const handleOpenVolunteeringModal = (
-    item: VolunteeringItem,
-    triggerRef: React.RefObject<HTMLButtonElement | null>
-  ) => {
-    activeTriggerRef.current = triggerRef.current;
-    setSelectedAchievement(null);
-    setSelectedVolunteering(item);
-    setIsModalOpen(true);
-  };
+  const handleOpenVolunteeringModal = useCallback(
+    (
+      item: VolunteeringItem,
+      triggerRef: React.RefObject<HTMLButtonElement | null>
+    ) => {
+      activeTriggerRef.current = triggerRef.current;
+      setSelectedAchievement(null);
+      setSelectedVolunteering(item);
+      setIsModalOpen(true);
+    },
+    []
+  );
 
-  const handleCloseModal = () => {
+  const handleCloseModal = useCallback(() => {
     setIsModalOpen(false);
-  };
+  }, []);
 
-  const stageTabs = [
-    {
-      id: 'achievements' as MilestoneStage,
-      labelKey: 'achievements.tab.achievements',
-      count: achievementList.length,
-      icon: <Trophy className="w-4 h-4" />,
-    },
-    {
-      id: 'programs_certs' as MilestoneStage,
-      labelKey: 'achievements.tab.programs',
-      count: programList.length,
-      icon: <GraduationCap className="w-4 h-4" />,
-    },
-    {
-      id: 'volunteering' as MilestoneStage,
-      labelKey: 'achievements.tab.volunteering',
-      count: volunteeringItems.length,
-      icon: <HeartHandshake className="w-4 h-4" />,
-    },
-  ];
+  const stageTabs = useMemo(
+    () => [
+      {
+        id: 'achievements' as MilestoneStage,
+        labelKey: 'achievements.tab.achievements',
+        count: achievementList.length,
+        icon: <Trophy className="w-4 h-4" />,
+      },
+      {
+        id: 'programs_certs' as MilestoneStage,
+        labelKey: 'achievements.tab.programs',
+        count: programList.length,
+        icon: <GraduationCap className="w-4 h-4" />,
+      },
+      {
+        id: 'volunteering' as MilestoneStage,
+        labelKey: 'achievements.tab.volunteering',
+        count: volunteeringItems.length,
+        icon: <HeartHandshake className="w-4 h-4" />,
+      },
+    ],
+    [achievementList.length, programList.length]
+  );
 
   const slideVariants: Variants = {
     enter: (dir: number) => {

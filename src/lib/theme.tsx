@@ -40,7 +40,7 @@ function getServerThemeSnapshot(): Theme {
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const theme = useSyncExternalStore(subscribeTheme, getThemeSnapshot, getServerThemeSnapshot);
 
-  const setTheme = (nextTheme: Theme) => {
+  const setTheme = React.useCallback((nextTheme: Theme) => {
     if (nextTheme === 'dark') {
       document.documentElement.classList.add('dark');
     } else {
@@ -49,14 +49,19 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     try {
       localStorage.setItem('theme', nextTheme);
     } catch {}
-  };
+  }, []);
 
-  const toggleTheme = () => {
+  const toggleTheme = React.useCallback(() => {
     setTheme(theme === 'dark' ? 'light' : 'dark');
-  };
+  }, [theme, setTheme]);
+
+  const contextValue = React.useMemo(
+    () => ({ theme, setTheme, toggleTheme }),
+    [theme, setTheme, toggleTheme]
+  );
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, toggleTheme }}>
+    <ThemeContext.Provider value={contextValue}>
       {children}
     </ThemeContext.Provider>
   );

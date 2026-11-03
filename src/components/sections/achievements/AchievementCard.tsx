@@ -43,7 +43,7 @@ function getIconByKind(achievement: Achievement) {
   return <Award className="w-4 h-4 text-accent-text" />;
 }
 
-export function AchievementCard({ achievement, onSelect }: AchievementCardProps) {
+function AchievementCardComponent({ achievement, onSelect }: AchievementCardProps) {
   const { t } = useLang();
   const cardRef = useRef<HTMLButtonElement>(null);
 
@@ -167,3 +167,5 @@ export function AchievementCard({ achievement, onSelect }: AchievementCardProps)
     </button>
   );
 }
+
+export const AchievementCard = React.memo(AchievementCardComponent);

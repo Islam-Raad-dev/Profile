@@ -23,12 +23,15 @@ const SECTION_COMPONENTS: Record<SectionId, React.ComponentType> = {
   contact: ContactSection,
 };
 
+const ENABLED_SECTIONS = site.sections.filter((s) => s.enabled);
+const INITIAL_SECTION = ENABLED_SECTIONS[0]?.id || 'home';
+
 export function ScrollLayout() {
   const { lang, t } = useLang();
   const isRTL = lang === 'ar';
 
-  const enabledSections = site.sections.filter((s) => s.enabled);
-  const initialSection = enabledSections[0]?.id || 'home';
+  const enabledSections = ENABLED_SECTIONS;
+  const initialSection = INITIAL_SECTION;
 
   const [activeSection, setActiveSection] = useState<SectionId>(initialSection);
   const [isTransitioning, setIsTransitioning] = useState<boolean>(false);

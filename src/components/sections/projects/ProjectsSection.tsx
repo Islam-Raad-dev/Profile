@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import type { Project } from '@/types';
 import { projects } from '@/content/projects';
@@ -25,11 +25,13 @@ export function ProjectsSection({ customProjects }: ProjectsSectionProps) {
   const { t } = useLang();
   const list = customProjects || projects;
 
-  const sortedProjects = [...list].sort((a, b) => {
-    if (a.featured && !b.featured) return -1;
-    if (!a.featured && b.featured) return 1;
-    return 0;
-  });
+  const sortedProjects = useMemo(() => {
+    return [...list].sort((a, b) => {
+      if (a.featured && !b.featured) return -1;
+      if (!a.featured && b.featured) return 1;
+      return 0;
+    });
+  }, [list]);
 
   const [selectedProject, setSelectedProject] = useState<Project | null>(() => {
     if (typeof window !== 'undefined') {
@@ -49,18 +51,21 @@ export function ProjectsSection({ customProjects }: ProjectsSectionProps) {
   });
   const activeTriggerRef = useRef<HTMLElement | null>(null);
 
-  const handleOpenModal = (
-    project: Project,
-    triggerRef: React.RefObject<HTMLButtonElement | null>
-  ) => {
-    activeTriggerRef.current = triggerRef.current;
-    setSelectedProject(project);
-    setIsModalOpen(true);
-  };
+  const handleOpenModal = useCallback(
+    (
+      project: Project,
+      triggerRef: React.RefObject<HTMLButtonElement | null>
+    ) => {
+      activeTriggerRef.current = triggerRef.current;
+      setSelectedProject(project);
+      setIsModalOpen(true);
+    },
+    []
+  );
 
-  const handleCloseModal = () => {
+  const handleCloseModal = useCallback(() => {
     setIsModalOpen(false);
-  };
+  }, []);
 
   return (
     <section

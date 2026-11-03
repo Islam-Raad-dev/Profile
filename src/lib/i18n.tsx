@@ -44,25 +44,33 @@ function getServerLangSnapshot(): Lang {
 export function LangProvider({ children }: { children: React.ReactNode }) {
   const lang = useSyncExternalStore(subscribeLang, getLangSnapshot, getServerLangSnapshot);
 
-  const setLang = (nextLang: Lang) => {
+  const setLang = React.useCallback((nextLang: Lang) => {
     document.documentElement.lang = nextLang;
     document.documentElement.dir = nextLang === 'ar' ? 'rtl' : 'ltr';
     try {
       localStorage.setItem('lang', nextLang);
     } catch {}
-  };
+  }, []);
 
-  const toggleLang = () => {
+  const toggleLang = React.useCallback(() => {
     setLang(lang === 'en' ? 'ar' : 'en');
-  };
+  }, [lang, setLang]);
 
-  const t = (l: L | undefined): string => {
-    if (!l) return '';
-    return l[lang] || l.en || '';
-  };
+  const t = React.useCallback(
+    (l: L | undefined): string => {
+      if (!l) return '';
+      return l[lang] || l.en || '';
+    },
+    [lang]
+  );
+
+  const contextValue = React.useMemo(
+    () => ({ lang, setLang, toggleLang, t }),
+    [lang, setLang, toggleLang, t]
+  );
 
   return (
-    <LangContext.Provider value={{ lang, setLang, toggleLang, t }}>
+    <LangContext.Provider value={contextValue}>
       {children}
     </LangContext.Provider>
   );

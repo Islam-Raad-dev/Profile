@@ -14,7 +14,7 @@ interface ProjectCardProps {
   onSelect: (project: Project, triggerRef: React.RefObject<HTMLButtonElement | null>) => void;
 }
 
-export function ProjectCard({ project, onSelect }: ProjectCardProps) {
+function ProjectCardComponent({ project, onSelect }: ProjectCardProps) {
   const { t } = useLang();
   const cardRef = useRef<HTMLButtonElement>(null);
 
@@ -76,3 +76,5 @@ export function ProjectCard({ project, onSelect }: ProjectCardProps) {
     </button>
   );
 }
+
+export const ProjectCard = React.memo(ProjectCardComponent);

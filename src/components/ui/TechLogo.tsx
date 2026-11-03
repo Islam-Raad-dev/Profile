@@ -97,15 +97,17 @@ const ICON_MAP: Record<string, SimpleIcon> = {
   graphql: siGraphql,
 };
 
-export function TechLogo({
-  slug,
-  size = 'md',
-  showLabel = false,
-  isHovered: propHovered,
-  className = '',
-}: TechLogoProps) {
-  const [internalHover, setInternalHover] = useState(false);
-  const activeHover = propHovered !== undefined ? propHovered : internalHover;
+interface ResolvedTech {
+  displayName: string;
+  resolvedKey: string;
+  normalized: string;
+}
+
+const TECH_CACHE = new Map<string, ResolvedTech>();
+
+function resolveTech(slug: string): ResolvedTech {
+  const cached = TECH_CACHE.get(slug);
+  if (cached) return cached;
 
   const normalized = slug.toLowerCase().replace(/[\s\-_.]/g, '');
   const skillInfo = skills.find(
@@ -126,6 +128,23 @@ export function TechLogo({
     ) ||
     (skillInfo?.icon && skillInfo.icon in ICON_MAP ? skillInfo.icon : undefined) ||
     normalized;
+
+  const resolved: ResolvedTech = { displayName, resolvedKey, normalized };
+  TECH_CACHE.set(slug, resolved);
+  return resolved;
+}
+
+function TechLogoComponent({
+  slug,
+  size = 'md',
+  showLabel = false,
+  isHovered: propHovered,
+  className = '',
+}: TechLogoProps) {
+  const [internalHover, setInternalHover] = useState(false);
+  const activeHover = propHovered !== undefined ? propHovered : internalHover;
+
+  const { displayName, resolvedKey, normalized } = resolveTech(slug);
 
   const icon = ICON_MAP[resolvedKey];
   const brandColor =
@@ -291,3 +310,5 @@ export function TechLogo({
     </div>
   );
 }
+
+export const TechLogo = React.memo(TechLogoComponent);

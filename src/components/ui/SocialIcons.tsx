@@ -50,7 +50,14 @@ function WhatsAppIcon({ className }: { className?: string }) {
   );
 }
 
-export function SocialIcons({
+const SOCIAL_LINKS = [
+  { name: 'GitHub', href: site.github, Icon: GithubIcon },
+  { name: 'LinkedIn', href: site.linkedin, Icon: LinkedInIcon },
+  { name: 'WhatsApp', href: site.whatsappUrl, Icon: WhatsAppIcon },
+  { name: 'Email', href: `mailto:${site.email}`, Icon: Mail },
+];
+
+function SocialIconsComponent({
   className = '',
   size = 'md',
   rounded = 'xl',
@@ -69,27 +76,23 @@ export function SocialIcons({
 
   const roundedClass = rounded === 'full' ? 'rounded-full' : 'rounded-xl';
 
-  const items = [
-    { name: 'GitHub', href: site.github, icon: <GithubIcon className={iconSize} /> },
-    { name: 'LinkedIn', href: site.linkedin, icon: <LinkedInIcon className={iconSize} /> },
-    { name: 'WhatsApp', href: site.whatsappUrl, icon: <WhatsAppIcon className={iconSize} /> },
-    { name: 'Email', href: `mailto:${site.email}`, icon: <Mail className={iconSize} /> },
-  ];
-
   return (
     <div className={`flex items-center gap-3 ${className}`}>
-      {items.map((item) => (
+      {SOCIAL_LINKS.map(({ name, href, Icon }) => (
         <a
-          key={item.name}
-          href={item.href}
-          target={item.name === 'Email' ? undefined : '_blank'}
-          rel={item.name === 'Email' ? undefined : 'noopener noreferrer'}
-          aria-label={item.name}
+          key={name}
+          href={href}
+          target={name === 'Email' ? undefined : '_blank'}
+          rel={name === 'Email' ? undefined : 'noopener noreferrer'}
+          aria-label={name}
           className={`${buttonSize} inline-flex items-center justify-center ${roundedClass} bg-card border border-border text-text-muted hover:text-accent-text hover:border-accent hover:shadow-card transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent`}
         >
-          {item.icon}
+          <Icon className={iconSize} />
         </a>
       ))}
     </div>
   );
 }
+
+export const SocialIcons = React.memo(SocialIconsComponent);
+
