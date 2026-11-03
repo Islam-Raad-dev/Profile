@@ -100,6 +100,14 @@ Schedule
 - [x] Achievements revamp: interactive category filter, 5-star ratings, timeline badges, learnings, portfolio project links, 14-course Programming Advices roadmap grouping, and Volunteering section
 - [x] Signature TemRevil interactive close button effect (red hover fill, 90deg spin, scale, tactile press, ambient glow) applied across all modal dialogs (Achievements, Projects, Digital CV)
 - [x] Scroll navigation: scroll down from Home to reveal page after page through the entire site with directional PageTransition curtain effect (wheel, trackpad, touch swipe, and ArrowDown/ArrowUp keys)
+- [x] Performance & 60/120 FPS Optimization (Safe Mode on `perf/safe-optimizations`):
+  - [x] Eliminating NeuralGrid layout thrashing (cached bounds, rAF throttled resize/scroll, running time accumulation without spring jumps)
+  - [x] Gestural throttling on mouse/wheel tracking with passive listeners and dimension caching
+  - [x] Context & Render Isolation (`useCallback`, `useMemo` in i18n/theme, `React.memo` on pure UI cards, cover art, and logos)
+  - [x] Asset loading optimization (loading="lazy" + decoding="async" on project covers, eager priority on hero photo)
+  - [x] Netlify cache headers configured (immutable static JS/CSS, SWR for media/projects)
+  - [x] Dynamic modal preloading with `requestIdleCallback` fallback and hover/focus triggers
+  - [x] Strict zero visual/animation regression guardrail honored (all sections statically imported, no permanent translate3d/backface-visibility, no content-visibility:auto)
 
 ---
 
