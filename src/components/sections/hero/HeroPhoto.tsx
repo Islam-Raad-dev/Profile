@@ -25,23 +25,36 @@ export function HeroPhoto({
 
   const smoothX = useSpring(rawMouseX, { stiffness: 120, damping: 20 });
   const smoothY = useSpring(rawMouseY, { stiffness: 120, damping: 20 });
+  const rAFRef = useRef<number | null>(null);
 
   const handleMouseMove = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       if (reducedMotion || isTouch || !containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
-      const offsetX = (e.clientX - centerX) / (rect.width / 2);
-      const offsetY = (e.clientY - centerY) / (rect.height / 2);
+      const clientX = e.clientX;
+      const clientY = e.clientY;
+      if (rAFRef.current !== null) return;
 
-      rawMouseX.set(offsetX * 6);
-      rawMouseY.set(offsetY * 6);
+      rAFRef.current = requestAnimationFrame(() => {
+        rAFRef.current = null;
+        if (!containerRef.current) return;
+        const rect = containerRef.current.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const offsetX = (clientX - centerX) / (rect.width / 2);
+        const offsetY = (clientY - centerY) / (rect.height / 2);
+
+        rawMouseX.set(offsetX * 6);
+        rawMouseY.set(offsetY * 6);
+      });
     },
     [reducedMotion, isTouch, rawMouseX, rawMouseY]
   );
 
   const handleMouseLeave = useCallback(() => {
+    if (rAFRef.current !== null) {
+      cancelAnimationFrame(rAFRef.current);
+      rAFRef.current = null;
+    }
     rawMouseX.set(0);
     rawMouseY.set(0);
   }, [rawMouseX, rawMouseY]);

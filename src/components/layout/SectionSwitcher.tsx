@@ -96,11 +96,34 @@ export function SectionSwitcher() {
   const lastAttemptTimeRef = useRef<number>(0);
   const touchStartYRef = useRef<number | null>(null);
   const touchStartXRef = useRef<number | null>(null);
+  const wheelRafIdRef = useRef<number | null>(null);
+  const cachedDimensionsRef = useRef<{ height: number; scrollHeight: number }>({
+    height: 0,
+    scrollHeight: 0,
+  });
+
+  const updateCachedDimensions = useCallback(() => {
+    if (typeof window === 'undefined') return;
+    cachedDimensionsRef.current = {
+      height: window.innerHeight,
+      scrollHeight: document.documentElement.scrollHeight,
+    };
+  }, []);
+
+  useEffect(() => {
+    updateCachedDimensions();
+    window.addEventListener('resize', updateCachedDimensions, { passive: true });
+    return () => window.removeEventListener('resize', updateCachedDimensions);
+  }, [updateCachedDimensions]);
 
   const checkScrollBoundaries = useCallback(() => {
     const scrollY = window.scrollY || document.documentElement.scrollTop;
-    const windowHeight = window.innerHeight;
-    const scrollHeight = document.documentElement.scrollHeight;
+    let { height: windowHeight, scrollHeight } = cachedDimensionsRef.current;
+    if (!windowHeight || !scrollHeight) {
+      windowHeight = window.innerHeight;
+      scrollHeight = document.documentElement.scrollHeight;
+      cachedDimensionsRef.current = { height: windowHeight, scrollHeight };
+    }
     const isAtTop = scrollY <= 15;
     const isAtBottom = windowHeight + scrollY >= scrollHeight - 30;
     return { isAtTop, isAtBottom };
@@ -234,56 +257,68 @@ export function SectionSwitcher() {
         accumulatedDeltaRef.current = 0;
       }, 250);
 
-      const { isAtTop, isAtBottom } = checkScrollBoundaries();
-      const currentIndex = enabledSections.findIndex((s) => s.id === activeSection);
-      if (currentIndex === -1) return;
+      accumulatedDeltaRef.current += e.deltaY;
 
-      if (e.deltaY > 0) {
-        if (!isAtBottom) {
-          accumulatedDeltaRef.current = 0;
-          return;
-        }
-
-        if (activeSection === 'achievements') {
-          const achElement = document.getElementById('achievements');
-          if (achElement && achElement.getAttribute('data-is-last-stage') === 'false') {
-            return;
-          }
-        }
-
-        if (currentIndex >= enabledSections.length - 1) return;
-
-        accumulatedDeltaRef.current += e.deltaY;
-        if (accumulatedDeltaRef.current >= 45) {
-          accumulatedDeltaRef.current = 0;
-          registerScrollAttempt('down', enabledSections[currentIndex + 1].id);
-        }
-      } else if (e.deltaY < 0) {
-        if (!isAtTop) {
-          accumulatedDeltaRef.current = 0;
-          return;
-        }
-
-        if (activeSection === 'achievements') {
-          const achElement = document.getElementById('achievements');
-          if (achElement && achElement.getAttribute('data-is-first-stage') === 'false') {
-            return;
-          }
-        }
-
-        if (currentIndex <= 0) return;
-
-        accumulatedDeltaRef.current += e.deltaY;
-        if (accumulatedDeltaRef.current <= -45) {
-          accumulatedDeltaRef.current = 0;
-          registerScrollAttempt('up', enabledSections[currentIndex - 1].id);
-        }
+      if (wheelRafIdRef.current !== null) {
+        return;
       }
+
+      wheelRafIdRef.current = requestAnimationFrame(() => {
+        wheelRafIdRef.current = null;
+        const { isAtTop, isAtBottom } = checkScrollBoundaries();
+        const currentIndex = enabledSections.findIndex((s) => s.id === activeSection);
+        if (currentIndex === -1) return;
+
+        const currentAccum = accumulatedDeltaRef.current;
+        if (currentAccum > 0) {
+          if (!isAtBottom) {
+            accumulatedDeltaRef.current = 0;
+            return;
+          }
+
+          if (activeSection === 'achievements') {
+            const achElement = document.getElementById('achievements');
+            if (achElement && achElement.getAttribute('data-is-last-stage') === 'false') {
+              return;
+            }
+          }
+
+          if (currentIndex >= enabledSections.length - 1) return;
+
+          if (currentAccum >= 45) {
+            accumulatedDeltaRef.current = 0;
+            registerScrollAttempt('down', enabledSections[currentIndex + 1].id);
+          }
+        } else if (currentAccum < 0) {
+          if (!isAtTop) {
+            accumulatedDeltaRef.current = 0;
+            return;
+          }
+
+          if (activeSection === 'achievements') {
+            const achElement = document.getElementById('achievements');
+            if (achElement && achElement.getAttribute('data-is-first-stage') === 'false') {
+              return;
+            }
+          }
+
+          if (currentIndex <= 0) return;
+
+          if (currentAccum <= -45) {
+            accumulatedDeltaRef.current = 0;
+            registerScrollAttempt('up', enabledSections[currentIndex - 1].id);
+          }
+        }
+      });
     };
 
     window.addEventListener('wheel', handleWheel, { passive: true });
     return () => {
       window.removeEventListener('wheel', handleWheel);
+      if (wheelRafIdRef.current !== null) {
+        cancelAnimationFrame(wheelRafIdRef.current);
+        wheelRafIdRef.current = null;
+      }
       if (deltaResetTimerRef.current) {
         clearTimeout(deltaResetTimerRef.current);
       }
