@@ -4,7 +4,7 @@ export const profile = {
   fullName: { en: 'Islam Raad', ar: 'إسلام رعــــد' } as L,
   shortName: { en: 'Islam', ar: 'إسلام' } as L,
   heroName: { line1: { en: 'ISLAM', ar: 'إسلام' }, line2: { en: 'RAAD', ar: 'رعــــد' } },
-  role: { en: 'AI Engineering Student', ar: 'طالب هندسة الذكاء الاصطناعي' } as L,
+  role: { en: 'AI Engineering ', ar: 'مهندس الذكاء الاصطناعي' } as L,
   tagline: {
     en: 'AI Engineering student at the University of Mosul.',
     ar: 'طالب هندسة ذكاء اصطناعي في جامعة الموصل.',
@@ -12,8 +12,8 @@ export const profile = {
   location: { en: 'Mosul, Iraq', ar: 'الموصل، العراق' } as L,
   greeting: { en: "Hello, I'm", ar: 'أهلاً، أنا' } as L,
   shortBio: {
-    en: "I build AI-powered applications and backend systems, and I'm deepening my machine learning skills.",
-    ar: 'أقوم ببناء تطبيقات وأنظمة خلفية مدعومة بالذكاء الاصطناعي، وأعمل على تعميق مهاراتي في تعلم الآلة.',
+    en: "An AI Engineering student driven by curiosity, engineering excellence, and the ambition to turn complex problems into meaningful solutions.",
+    ar: 'طالب هندسة ذكاء اصطناعي، يقوده الفضول وشغف التعلّم والبناء، ويطمح إلى توظيف المعرفة والهندسة لتحويل التحديات المعقّدة إلى حلول عملية تُحدث أثرًا حقيقيًا.',
   } as L,
   longBio: {
     en: "Second-year AI Engineering student at the University of Mosul. I build AI-powered applications and backend systems, and I'm deepening my machine learning skills through Samsung Innovation Campus and GCI World. I'm seeking opportunities to learn and contribute to real-world AI and software projects.",
