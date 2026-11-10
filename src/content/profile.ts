@@ -4,7 +4,7 @@ export const profile = {
   fullName: { en: 'Islam Raad', ar: 'إسلام رعــــد' } as L,
   shortName: { en: 'Islam', ar: 'إسلام' } as L,
   heroName: { line1: { en: 'ISLAM', ar: 'إسلام' }, line2: { en: 'RAAD', ar: 'رعــــد' } },
-  role: { en: 'AI Engineering ', ar: 'مهندس الذكاء الاصطناعي' } as L,
+  role: { en: 'AI Engineering ', ar: 'مهندس ذكاء اصطناعي' } as L,
   tagline: {
     en: 'AI Engineering student at the University of Mosul.',
     ar: 'طالب هندسة ذكاء اصطناعي في جامعة الموصل.',
